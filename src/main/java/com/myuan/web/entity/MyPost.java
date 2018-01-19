@@ -7,14 +7,22 @@ package com.myuan.web.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter
 @Setter
+@Entity
 public class MyPost extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 8830292656435150109L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //自增长主键
+    private Long id;
 
     private String userId;
 
@@ -42,6 +50,8 @@ public class MyPost extends BaseEntity implements Serializable {
     private String accepted;
 
     private String content;
-    //发帖人
-//    private FlyUser user;
+
+    //发帖人,不加入数据库
+    @Transient
+    private MyUser user;
 }

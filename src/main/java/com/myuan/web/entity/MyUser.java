@@ -3,6 +3,10 @@ package com.myuan.web.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /*
@@ -12,9 +16,15 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@Entity
 public class MyUser extends BaseEntity implements Serializable{
 
     private static final long serialVersionUID = 5615703065557959847L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //自增长主键
+    private Long id;
 
     private String name;
 
@@ -33,4 +43,5 @@ public class MyUser extends BaseEntity implements Serializable{
     private String locked;
 
     private String description;
+
 }

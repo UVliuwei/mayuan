@@ -10,24 +10,25 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
+//子类包含本类的属性
+@MappedSuperclass
 public class BaseEntity {
-    @Id
-    private String id;
-    private Date createDate;
-    private Date updateDate;
+
+    protected Date createDate;
+    protected Date updateDate;
     //格式化的日期
-    private String time;
+    @Transient
+    protected String time;
 
     /**
      * 插入操作时手动调用
      */
     public void preInsert() {
-        String id = IdUtil.getId();
-        this.id=id;
         this.createDate = new Date();
         this.updateDate = new Date();
     }
