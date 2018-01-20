@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  *  签到类
  */
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
-@Getter
-@Setter
+@Data
 @Entity
 public class MySign extends BaseEntity implements Serializable {
 

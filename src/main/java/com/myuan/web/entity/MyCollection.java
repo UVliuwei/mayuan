@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  * 收藏类
  */
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
-@Getter
-@Setter
+@Data
 @Entity
 public class MyCollection implements Serializable {
 

@@ -1,5 +1,6 @@
 package com.myuan.web.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,7 @@ import java.io.Serializable;
  * @date 2018/1/19 16:58
  *  权限类
  */
-@Getter
-@Setter
+@Data
 @Entity
 public class MyAuthority extends BaseEntity implements Serializable {
 

@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  * 发帖类
  */
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @Entity
 public class MyPost extends BaseEntity implements Serializable {
 

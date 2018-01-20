@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div class="fly-header layui-bg-black" >
+<div class="fly-header layui-bg-black">
   <div class="layui-container">
     <a class="fly-logo" href="/">
       <img th:src="@{/res/images/logo.png}" alt="myuan"/>
@@ -40,10 +40,12 @@
         <a href="user/reg.html">注册</a>
       </li>
       <li class="layui-nav-item layui-hide-xs">
-        <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>
+        <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})"
+           title="QQ登入" class="iconfont icon-qq"></a>
       </li>
       <li class="layui-nav-item layui-hide-xs">
-        <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>
+        <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})"
+           title="微博登入" class="iconfont icon-weibo"></a>
       </li>
     </ul>
   </div>
@@ -59,7 +61,7 @@
       <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
         <div class="layui-tab-item layui-show">
           <div class="layui-form layui-form-pane">
-            <form id="regForm" action="/user/reg" method="post">
+            <form id="regForm" th:action="@{/user/reg}">
               <div class="layui-form-item">
                 <label for="L_email" class="layui-form-label">邮箱</label>
                 <div class="layui-input-inline">
@@ -79,7 +81,7 @@
                 <label for="L_pass" class="layui-form-label">密码</label>
                 <div class="layui-input-inline">
                   <input type="password" id="L_pass" name="password" required="required"
-                         lay-verify="required" autocomplete="off" class="layui-input"/>
+                         lay-verify="password" autocomplete="off" class="layui-input"/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">6到16个字符</div>
               </div>
@@ -88,7 +90,7 @@
                 <div class="layui-input-inline">
                   <input id="L_city" name="city" value="" type="hidden"/>
                   <input type="password" id="L_repass" name="repassword" required="required"
-                         lay-verify="required" autocomplete="off" class="layui-input"/>
+                         lay-verify="password" autocomplete="off" class="layui-input"/>
                 </div>
               </div>
               <div class="layui-form-item">
@@ -130,9 +132,21 @@
     <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
   </p>
 </div>
-
+<script th:src="@{/res/layui/layui.js}"></script>
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/user.js}"></script>
+<script>
+  layui.use("form", function () {
+    var form = layui.form;
+    form.verify({
+      password: function (value) {
+        if (!/^.{6,16}$/.test(value)) {
+          return '用户名长度不合法';
+        }
+      }
+    });
+  });
+</script>
 <script>
   layui.cache.page = 'user';
   layui.cache.user = {
