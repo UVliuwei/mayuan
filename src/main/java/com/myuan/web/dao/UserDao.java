@@ -6,11 +6,11 @@ package com.myuan.web.dao;
  */
 
 import com.myuan.web.entity.MyUser;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserDao extends JpaRepository<MyUser, String>{
+public interface UserDao extends BaseDao<MyUser> {
 
     MyUser findMyUsersByName(String name);
+    MyUser findMyUsersByEmail(String email);
 }

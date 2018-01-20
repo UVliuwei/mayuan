@@ -5,10 +5,8 @@ package com.myuan.web.entity;
  *
  */
 
-import com.myuan.web.utils.IdUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.util.Date;

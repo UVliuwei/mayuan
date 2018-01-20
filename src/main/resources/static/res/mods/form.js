@@ -14,7 +14,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
               data:data.field,
               success: function(res) {
             	var res = $.parseJSON(res);
-              	if(res.status==="0") {
+              	if(res.status==="1") {
               		layer.msg(res.msg,{
           				  time: 2000 ,//2秒关闭（如果不配置，默认是3秒）
           				  anim:6
