@@ -141,7 +141,7 @@
     form.verify({
       password: function (value) {
         if (!/^.{6,16}$/.test(value)) {
-          return '用户名长度不合法';
+          return '密码长度必须在6到16位之间';
         }
       }
     });

@@ -1,9 +1,9 @@
 package com.myuan.web.controller;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.annotations.ApiIgnore;
 
 /*
@@ -11,12 +11,18 @@ import springfox.documentation.annotations.ApiIgnore;
  * @date 2018/1/19 10:57
  *
  */
-@RestController
-public class IndexController {
+@Configuration
+public class IndexController extends WebMvcConfigurerAdapter {
 
-    @GetMapping(value = {"/","index"})
-    @ApiIgnore
-    public ModelAndView hello(Model model) {
-        return new ModelAndView("index");
+
+    /**
+     * 页面跳转 <liuwei> [2018/1/27 10:52]
+     */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("index");
+        registry.addViewController("myuan/user/login").setViewName("user/login");
+        registry.addViewController("/user/reg").setViewName("user/reg");
+        registry.addViewController("/user/set").setViewName("user/set");
     }
 }

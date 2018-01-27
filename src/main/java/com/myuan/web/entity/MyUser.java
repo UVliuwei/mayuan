@@ -1,5 +1,7 @@
 package com.myuan.web.entity;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -24,13 +26,15 @@ public class MyUser extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique = true)
+    @Size(min = 3, max = 10, message = "用户名长度在3到10之间")
     private String name;
 
     private String sex;
-
+    @Size(min = 6, max = 16, message = "密码长度在6到16之间")
     private String password;
     @Email
+    @Column(unique = true)
     private String email;
 
     private String city;

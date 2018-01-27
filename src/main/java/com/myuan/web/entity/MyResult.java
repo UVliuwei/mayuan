@@ -18,8 +18,6 @@ public class MyResult {
     private String msg;
     //json格式的返回数据
     private String data;
-    //根路径
-    private final String baseUrl = "/myuan";
     //跳转的url
     private String action;
 
@@ -28,11 +26,10 @@ public class MyResult {
         this.msg = msg;
         this.data = data;
         if (action != null) {
-            this.action = baseUrl + action;
+            this.action = action;
         } else {
             this.action = action;
         }
-
     }
 
     public static MyResult action(String action, String msg) {
