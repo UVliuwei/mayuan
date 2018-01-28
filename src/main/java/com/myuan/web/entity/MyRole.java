@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  * 角色类
  */
 
+import javax.persistence.Column;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class MyRole extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //自增长主键
     private Long id;
-
+    @Column(unique = true)
     private String name;
 
     private String type;

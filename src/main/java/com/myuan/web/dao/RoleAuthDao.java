@@ -7,10 +7,12 @@ package com.myuan.web.dao;
 
 import com.myuan.web.entity.MyRoleAuth;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleAuthDao extends BaseDao<MyRoleAuth> {
 
-    List<MyRoleAuth> findMyRoleAuthsByRoleId(String roleId);
+    @Query("select roleAuth.authId from MyRoleAuth roleAuth where roleAuth.roleId = ?1")
+    List<Long> findAuthIdByRoleId(Long roleId);
 }

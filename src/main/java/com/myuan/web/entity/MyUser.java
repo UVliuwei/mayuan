@@ -1,6 +1,7 @@
 package com.myuan.web.entity;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 
@@ -31,9 +32,10 @@ public class MyUser extends BaseEntity implements Serializable {
     private String name;
 
     private String sex;
-    @Size(min = 6, max = 16, message = "密码长度在6到16之间")
+
     private String password;
     @Email
+    @NotNull(message = "邮箱不能为空")
     @Column(unique = true)
     private String email;
 

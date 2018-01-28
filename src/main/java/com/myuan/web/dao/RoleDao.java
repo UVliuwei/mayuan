@@ -6,9 +6,15 @@ package com.myuan.web.dao;
  */
 
 import com.myuan.web.entity.MyRole;
+import java.util.List;
+import org.apache.ibatis.annotations.Select;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleDao extends BaseDao<MyRole> {
 
+    List<MyRole> findMyRolesByIdIn(List<Long> ids);
+
+    MyRole findMyRoleByType(String type);
 }

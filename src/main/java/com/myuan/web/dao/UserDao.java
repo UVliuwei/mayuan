@@ -6,6 +6,7 @@ package com.myuan.web.dao;
  */
 
 import com.myuan.web.entity.MyUser;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Repository;
 
 @Repository

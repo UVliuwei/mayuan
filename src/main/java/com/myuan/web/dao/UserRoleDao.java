@@ -5,13 +5,16 @@ package com.myuan.web.dao;
  *
  */
 
+import com.myuan.web.entity.MyRole;
 import com.myuan.web.entity.MyUserRole;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRoleDao extends BaseDao<MyUserRole> {
 
-    List<MyUserRole> findMyUserRolesByUserId(String userId);
+    @Query("select userRole.roleId from MyUserRole userRole where userRole.userId = ?1")
+    List<Long> findRoleIdByUserId(Long userId);
 
 }
