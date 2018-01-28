@@ -5,6 +5,7 @@ package com.myuan.web.config;
  * shiro配置类
  */
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.google.common.collect.Maps;
 import com.myuan.web.shiro.MyShiroRealm;
 import java.util.Map;
@@ -38,8 +39,7 @@ public class ShiroConfig {
     }
 
     /**
-     * <liuwei> [2018/1/20 21:50]
-     * 权限范围
+     * <liuwei> [2018/1/20 21:50] 权限范围
      */
     @Bean
     public MyShiroRealm myShiroRealm() {
@@ -48,10 +48,17 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager(){
-        DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm());
         return securityManager;
     }
 
+    /**
+     * shiro标签
+     */
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
+    }
 }

@@ -14,4 +14,5 @@ public interface UserDao extends BaseDao<MyUser> {
 
     MyUser findMyUsersByName(String name);
     MyUser findMyUsersByEmail(String email);
+    MyUser findMyUsersById(Long id);
 }

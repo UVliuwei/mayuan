@@ -1,6 +1,5 @@
 package com.myuan.web.service;
 
-import com.myuan.web.dao.RoleDao;
 import com.myuan.web.dao.UserDao;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyRole;
@@ -23,14 +22,19 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private RoleDao roleDao;
 
     /**
      * 用户名查用户
      */
     public MyUser getUserByName(String name) {
         return userDao.findMyUsersByName(name);
+    }
+
+    /**
+     * 用户ID查用户
+     */
+    public MyUser getUserById(Long id) {
+        return userDao.findMyUsersById(id);
     }
 
     /**

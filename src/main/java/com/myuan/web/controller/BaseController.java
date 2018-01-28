@@ -7,6 +7,10 @@ package com.myuan.web.controller;
 
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -15,20 +19,19 @@ import org.springframework.validation.BindingResult;
 public class BaseController {
 
     /**
-     * 表单验证
-     * <liuwei> [2018/1/27 12:41]
+     * 表单验证 <liuwei> [2018/1/27 12:41]
      */
     protected MyResult validForm(BindingResult result) {
-            String message = result.getFieldError().getDefaultMessage();
-            return MyResult.error(message);
+        String message = result.getFieldError().getDefaultMessage();
+        return MyResult.error(message);
     }
+
     /**
-     * shiro session
-     * <liuwei> [2018/1/28 11:48]
+     * shiro session <liuwei> [2018/1/28 11:48]
      */
     public void setUserSession(MyUser user) {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession(true);
-        session .setAttribute("user", user);
+        session.setAttribute("user", user);
     }
 }

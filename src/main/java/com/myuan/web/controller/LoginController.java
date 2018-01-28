@@ -6,6 +6,8 @@ import com.myuan.web.service.UserService;
 import com.myuan.web.utils.SaltPasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.SecurityUtils;
