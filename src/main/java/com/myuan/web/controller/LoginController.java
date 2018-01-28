@@ -72,19 +72,4 @@ public class LoginController extends BaseController {
         MyResult result = userService.saveUser(user);
         return result;
     }
-
-    /**
-     * <liuwei> [2018/1/19 15:47] 登录跳转 注册跳转
-     */
-    @GetMapping("login")
-    @ApiIgnore
-    public ModelAndView login() {
-        return new ModelAndView("user/login");
-    }
-
-    @GetMapping("reg")
-    @ApiIgnore
-    public ModelAndView register() {
-        return new ModelAndView("user/reg");
-    }
 }
