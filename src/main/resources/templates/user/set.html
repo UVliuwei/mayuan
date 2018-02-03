@@ -9,11 +9,11 @@
   <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}"/>
   <link rel="stylesheet" th:href="@{/res/css/global.css}"/>
   <script th:src="@{/res/layui/layui.js}"/>
-  <script th:src="@{/res/layui/lay/modules/jquery.js}"></script>
-  <script th:src="@{http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js}"/>
-
+  <script th:src="@{/res/mods/form.js}"></script>
+  <script th:src="@{/res/mods/jquery.js}"></script>
+  <script th:src="@{https://cdn.bootcss.com/angular.js/1.6.3/angular.min.js}"></script>
 </head>
-<body>
+<body ng-app="app">
 <div class="fly-header layui-bg-black">
   <div class="layui-container">
     <a class="fly-logo" href="/">
@@ -27,7 +27,6 @@
         <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>
       </li>
     </ul>
-
     <ul class="layui-nav fly-nav-user">
       <!-- 未登入的状态 -->
       <shiro:guest>
@@ -128,37 +127,34 @@
         <li lay-id="bind">帐号绑定</li>
       </ul>
       <div class="layui-tab-content" style="padding: 20px 0;">
-        <div class="layui-form layui-form-pane layui-tab-item layui-show" ng-app="info"
+        <div class="layui-form layui-form-pane layui-tab-item layui-show"
              ng-controller="infoController">
-          <form method="post">
+          <form id="infoForm" method="put">
             <div class="layui-form-item">
               <label for="email" class="layui-form-label">邮箱</label>
               <div class="layui-input-inline">
-                <input type="text" id="email" name="email" required="required" lay-verify="email"
-                       autocomplete="off" ng-model="email" class="layui-input"/>
-              </div>
-              <div class="layui-form-mid layui-word-aux">如果您在邮箱已激活的情况下，变更了邮箱，需<a
-                  href="activate.html" style="font-size: 12px; color: #4f99cf;">重新验证邮箱</a>。
+                <input type="text" id="email" name="email" disabled="disabled" required="required" lay-verify="email"
+                       autocomplete="off" ng-model="user.email" class="layui-input"/>
               </div>
             </div>
             <div class="layui-form-item">
               <label for="name" class="layui-form-label">昵称</label>
               <div class="layui-input-inline">
                 <input type="text" id="name" name="name" required="required" lay-verify="required"
-                       autocomplete="off" ng-model="name" class="layui-input"/>
+                       autocomplete="off" ng-model="user.name" class="layui-input"/>
               </div>
               <div class="layui-inline">
                 <div class="layui-input-inline">
-                  <input type="radio" name="sex" ng-model="sex" value="男" checked="checked"
+                  <input type="radio" name="sex" ng-model="user.sex" value="男" checked="checked"
                          title="男"/>
-                  <input type="radio" name="sex" ng-model="sex" value="女" title="女"/>
+                  <input type="radio" name="sex" ng-model="user.sex" value="女" title="女"/>
                 </div>
               </div>
             </div>
             <div class="layui-form-item">
               <label for="city" class="layui-form-label">城市</label>
               <div class="layui-input-inline">
-                <input type="text" id="city" name="city" autocomplete="off" ng-model="city"
+                <input type="text" id="city" name="city" autocomplete="off" ng-model="user.city"
                        class="layui-input"/>
               </div>
             </div>
@@ -166,7 +162,7 @@
               <label for="description" class="layui-form-label">签名</label>
               <div class="layui-input-block">
                 <textarea placeholder="随便写些什么刷下存在感" id="description" name="description"
-                          autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
+                          ng-model="user.description"  autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
               </div>
             </div>
             <div class="layui-form-item">
@@ -189,13 +185,12 @@
           </div>
         </div>
 
-        <div class="layui-form layui-form-pane layui-tab-item" ng-app="pass"
-             ng-controller="passController">
-          <form action="/user/repass" method="post">
+        <div class="layui-form layui-form-pane layui-tab-item">
+          <form id="passForm" method="put">
             <div class="layui-form-item">
               <label for="L_nowpass" class="layui-form-label">当前密码</label>
               <div class="layui-input-inline">
-                <input type="password" id="L_nowpass" name="nowpass" required="required"
+                <input type="password" id="L_nowpass" name="oldPass" required="required"
                        lay-verify="required" autocomplete="off" class="layui-input"/>
               </div>
             </div>
@@ -203,7 +198,7 @@
               <label for="L_pass" class="layui-form-label">新密码</label>
               <div class="layui-input-inline">
                 <input type="password" id="L_pass" name="pass" required="required"
-                       lay-verify="required" autocomplete="off" class="layui-input"/>
+                       lay-verify="password" autocomplete="off" class="layui-input"/>
               </div>
               <div class="layui-form-mid layui-word-aux">6到16个字符</div>
             </div>
@@ -215,11 +210,10 @@
               </div>
             </div>
             <div class="layui-form-item">
-              <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">确认修改</button>
+              <button class="layui-btn" key="set-mine" lay-filter="form" lay-submit="">确认修改</button>
             </div>
           </form>
         </div>
-
         <div class="layui-form layui-form-pane layui-tab-item">
           <ul class="app-bind">
             <li class="fly-msg app-havebind">
@@ -254,14 +248,33 @@
     <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
   </p>
 </div>
-<script src="${ctx }/res/mods/form.js"></script>
 <script>
-
+    var id = getUserId();
+    var app = angular.module("app",[]);
+    app.controller("infoController", function ($scope) {
+        $("#infoForm").attr("action", "/api/user/" + id);
+        $.get("/api/user/" + id, function (data) {
+            $scope.$apply(function () {
+                $scope.user = angular.copy(data);
+            });
+        });
+    });
+    $("#passForm").attr("action", "/api/user/" + id + "/pass");
+    layui.use("form", function () {
+        var form = layui.form;
+        form.verify({
+            password: function (value) {
+                if (!/^.{6,16}$/.test(value)) {
+                    return '密码长度必须在6到16位之间';
+                }
+            }
+        });
+    });
 </script>
 <script>
   layui.config({
     version: "2.0.0"
-    , base: '../../res/mods/'
+    , base: '/res/mods/'
   }).extend({
     fly: 'index'
   }).use('fly');

@@ -4,6 +4,8 @@ import com.myuan.web.dao.UserDao;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyRole;
 import com.myuan.web.entity.MyUser;
+import com.myuan.web.utils.SaltPasswordUtil;
+import java.util.Date;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,7 @@ public class UserService {
             return MyResult.action("/user/login", "注册成功");
         } catch (Exception ex) {
             ex.printStackTrace();
+            log.info("用户注册更新异常");
         }
         return MyResult.error("系统异常,请重试");
     }
@@ -79,4 +82,33 @@ public class UserService {
         roleService.saveUserRole(userId, role.getId());
     }
 
+    /**
+     * 更新用户密码
+     */
+    @Transactional
+    public MyResult updateUserPass(Long id, String pass) {
+        String newPass = SaltPasswordUtil.getNewPassword(pass);
+        userDao.updateMyUserPass(id, newPass);
+        return MyResult.ok("密码修改成功");
+    }
+
+    /**
+     * 更新用户信息
+     */
+    @Transactional
+    public MyResult updateUserInfo(Long id, String name, String sex, String city, String description) {
+        try {
+            MyUser user = getUserByName(name);
+            if (user != null && !user.getId().equals(id)) {
+                return MyResult.error("用户名已存在");
+            }
+            city = city == "" || city == null ? "隐藏" : city;
+            userDao.updateUserInfo(id, name, sex, city, description, new Date());
+            return MyResult.ok("信息更新成功");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.info("用户信息更新异常");
+        }
+        return MyResult.error("系统异常，请重试");
+    }
 }

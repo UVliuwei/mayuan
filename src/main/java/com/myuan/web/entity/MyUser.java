@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 
 /*
  * @author liuwei
@@ -46,7 +47,7 @@ public class MyUser extends BaseEntity implements Serializable {
     private Integer kiss;
 
     private String locked;
-
+    @Length(max = 25, message = "签名不能超过25个字")
     private String description;
 
 }
