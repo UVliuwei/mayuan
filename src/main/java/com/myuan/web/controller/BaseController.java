@@ -29,9 +29,13 @@ public class BaseController {
     /**
      * shiro session <liuwei> [2018/1/28 11:48]
      */
-    public void setUserSession(MyUser user) {
+    public void setUserSession(MyUser user, HttpServletResponse response) {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession(true);
         session.setAttribute("user", user);
+        Cookie cookie = new Cookie("myuan_id", user.getId().toString());
+        cookie.setMaxAge(Integer.MAX_VALUE);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }

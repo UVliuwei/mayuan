@@ -6,7 +6,6 @@ import com.myuan.web.service.UserService;
 import com.myuan.web.utils.SaltPasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.log4j.Log4j;
@@ -16,12 +15,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.annotations.ApiIgnore;
 
 /*
  * @author liuwei
@@ -42,9 +38,9 @@ public class LoginController extends BaseController {
      */
     @PostMapping("login")
     @ApiOperation(value = "用户登录", notes = "用户登录")
-    public MyResult login(String email, String password) {
+    public MyResult login(String email, String password, HttpServletResponse response) {
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(email,SaltPasswordUtil.getNewPassword(password));
+        UsernamePasswordToken token = new UsernamePasswordToken(email, SaltPasswordUtil.getNewPassword(password));
         try {
             subject.login(token);
         } catch (LockedAccountException lock) {
@@ -53,9 +49,10 @@ public class LoginController extends BaseController {
         } catch (Exception e) {
             return MyResult.error("用户名或密码错误");
         }
-        MyUser user=userService.getUserByEmail(email);
-        setUserSession(user);
-        return MyResult.action("/user/index","登录成功");
+        MyUser user = userService.getUserByEmail(email);
+        setUserSession(user, response);
+        log.info(email + " : 登陆成功");
+        return MyResult.action("/user/set", "登录成功");
     }
 
     /**
@@ -64,7 +61,7 @@ public class LoginController extends BaseController {
     @PostMapping("reg")
     @ApiOperation(value = "用户注册", notes = "用户注册")
     public MyResult register(@Valid MyUser user, BindingResult bindingResult, String repassword) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return validForm(bindingResult);
         }
         if (!user.getPassword().equals(repassword)) {
