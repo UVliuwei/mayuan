@@ -28,10 +28,11 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/user/reg", "anon");
         filterChainDefinitionMap.put("/user/forget", "anon");
-        filterChainDefinitionMap.put("/user/logout", "logout");
+        filterChainDefinitionMap.put("/user/logout", "anon");
         filterChainDefinitionMap.put("/index", "anon");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/jie/detail", "anon");
+        filterChainDefinitionMap.put("/**", "user");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         shiroFilterFactoryBean.setLoginUrl("/user/login");
         shiroFilterFactoryBean.setUnauthorizedUrl("/system/404");

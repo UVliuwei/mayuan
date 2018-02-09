@@ -1,15 +1,10 @@
 package com.myuan.web.config;
 
-import com.myuan.web.entity.MyResult;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
+import lombok.extern.log4j.Log4j;
+import org.apache.shiro.ShiroException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*
@@ -18,10 +13,17 @@ import org.springframework.web.servlet.ModelAndView;
  * 全局异常处理，接受controller抛出的异常
  */
 
-@ControllerAdvice
+@ControllerAdvice(annotations = {Controller.class})
+@Log4j
 public class GlobalExceptionHandler {
 
-    public static final String DEFAULT_ERROR_VIEW = "404";
+    public static final String DEFAULT_NOAUTH_VIEW = "noauthc";
+
+    @ExceptionHandler(ShiroException.class)
+    public ModelAndView shiroException(Exception ex) {
+        log.info("无权限访问");
+        return new ModelAndView("system/" + DEFAULT_NOAUTH_VIEW);
+    }
 
 
 }

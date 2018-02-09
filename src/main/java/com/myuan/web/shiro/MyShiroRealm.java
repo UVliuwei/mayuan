@@ -67,7 +67,6 @@ public class MyShiroRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         String email = token.getUsername();
         MyUser user = userService.getUserByEmail(email);
-
 		if(user!=null) {
 			if("1".equals(user.getLocked())) {
 	        	throw new LockedAccountException();

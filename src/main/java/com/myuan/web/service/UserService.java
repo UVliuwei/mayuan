@@ -63,6 +63,7 @@ public class UserService {
             user.setKiss(200);
             user.setLocked("0");
             userDao.save(user);
+
             log.info("用户：" + user.getName() + "注册成功");
             saveUserRole(user.getId());
             return MyResult.action("/user/login", "注册成功");
@@ -95,7 +96,6 @@ public class UserService {
     /**
      * 更新用户信息
      */
-    @Transactional
     public MyResult updateUserInfo(Long id, String name, String sex, String city, String description) {
         try {
             MyUser user = getUserByName(name);

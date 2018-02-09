@@ -76,12 +76,11 @@ layui.define('fly', function(exports){
     del: function(div){
       layer.confirm('确认删除该求解么？', function(index){
         layer.close(index);
-        fly.json('/jie/jie-delete', {
+        fly.json('/api/jie-delete/', {
           id: div.data('id')
         }, function(res){
-          var res = $.parseJSON(res);
-          if(res.status === "1"){
-            location.href = '/jie/index';
+          if(res.status === 0){
+            location.href = '/jie/';
           } else {
             layer.msg(res.msg);
           }
@@ -92,16 +91,13 @@ layui.define('fly', function(exports){
     //设置置顶、状态
     ,set: function(div){
       var othis = $(this);
-      $.post('/jie/jie-set', {
+      fly.json('/api/jie-set/', {
         id: div.data('id')
         ,rank: othis.attr('rank')
         ,field: othis.attr('field')
       }, function(res){
-    	var res = $.parseJSON(res);
-        if(res.status === "1"){
+        if(res.status === 0){
           location.reload();
-        } else {
-        	layer.msg("操作失败");
         }
       });
     }
@@ -109,10 +105,9 @@ layui.define('fly', function(exports){
     //收藏
     ,collect: function(div){
       var othis = $(this), type = othis.data('type');
-      $.post('/collection/'+ type, {
+      fly.json('/collection/'+ type +'/', {
         cid: div.data('id')
       }, function(res){
-      	var res = $.parseJSON(res);
         if(type === 'add'){
           othis.data('type', 'remove').html('取消收藏').addClass('layui-btn-danger');
         } else if(type === 'remove'){
@@ -129,17 +124,15 @@ layui.define('fly', function(exports){
 
   //异步渲染
   var asyncRender = function(){
-
     var div = $('.fly-admin-box'), jieAdmin = $('#LAY_jieAdmin');
     //查询帖子是否收藏
-    
-      $.post('/collection/find', {
+    if(jieAdmin[0] && layui.cache.user.uid != -1){
+      fly.json('/collection/find/', {
         cid: div.data('id')
       }, function(res){
-      	var res = $.parseJSON(res);
-        jieAdmin.append('<span class="layui-btn layui-btn-xs jie-admin '+ (res.status == "1" ? 'layui-btn-danger' : '') +'" type="collect" data-type="'+ (res.status == "1" ? 'remove' : 'add') +'">'+ (res.status == "1" ? '取消收藏' : '收藏') +'</span>');
+        jieAdmin.append('<span class="layui-btn layui-btn-xs jie-admin '+ (res.data.collection ? 'layui-btn-danger' : '') +'" type="collect" data-type="'+ (res.data.collection ? 'remove' : 'add') +'">'+ (res.data.collection ? '取消收藏' : '收藏') +'</span>');
       });
-
+    }
   }();
 
   //解答操作
