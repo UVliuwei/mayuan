@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,18 +23,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api("提问接口层")
 @RequestMapping("api")
-public class PostController extends BaseController{
+public class PostController extends BaseController {
 
     @Autowired
     private PostService postService;
 
     @PostMapping("post")
-    @ApiOperation(value = "发帖", notes = "发帖")
+    @ApiOperation(value = "发表问题", notes = "发表问题")
     public MyResult addPost(@Valid MyPost post, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return validForm(bindingResult);
         }
         MyResult result = postService.savePost(post);
+        return result;
+    }
+
+    @PutMapping("post")
+    @ApiOperation(value = "编辑问题", notes = "编辑问题")
+    public MyResult editPost(@Valid MyPost post, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validForm(bindingResult);
+        }
+        MyResult result = postService.editPost(post);
         return result;
     }
 }

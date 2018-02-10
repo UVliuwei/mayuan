@@ -5,16 +5,13 @@ package com.myuan.web.entity;
  * 发帖类
  */
 
-import com.sun.istack.internal.Nullable;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import lombok.Data;
 
@@ -37,9 +34,7 @@ public class MyPost extends BaseEntity implements Serializable {
     private String title;
 
     private String ptype;
-
     //技术方向
-    @Nullable
     private String version;
 
     //专栏

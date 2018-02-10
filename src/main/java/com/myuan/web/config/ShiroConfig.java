@@ -24,12 +24,15 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //路径拦截器
         Map<String, String> filterChainDefinitionMap = Maps.newLinkedHashMap();
-        filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/res/**", "anon");
+        filterChainDefinitionMap.put("/images/**", "anon");
+        filterChainDefinitionMap.put("/json/**", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/user/reg", "anon");
         filterChainDefinitionMap.put("/user/forget", "anon");
         filterChainDefinitionMap.put("/user/logout", "anon");
         filterChainDefinitionMap.put("/index", "anon");
+        filterChainDefinitionMap.put("/system/**", "anon");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/jie/detail", "anon");
         filterChainDefinitionMap.put("/**", "user");

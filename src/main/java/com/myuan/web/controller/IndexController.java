@@ -1,14 +1,11 @@
 package com.myuan.web.controller;
 
-import com.myuan.web.entity.MyPost;
 import com.myuan.web.service.PostService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.annotations.ApiIgnore;
 
 /*
@@ -33,6 +30,10 @@ public class IndexController {
         return ("jie/" + path);
     }
 
-
+    @GetMapping("jie/edit/{id}")
+    public String getPost(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("post", postService.getPostById(id));
+        return "jie/edit";
+    }
 
 }

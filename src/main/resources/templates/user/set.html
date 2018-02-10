@@ -150,9 +150,9 @@
               </div>
             </div>
             <div class="layui-form-item">
-              <label for="city" class="layui-form-label">城市</label>
+              <label for="L_city" class="layui-form-label">城市</label>
               <div class="layui-input-inline">
-                <input type="text" id="city" name="city" autocomplete="off" ng-model="user.city"
+                <input type="text" id="L_city" name="city" autocomplete="off" ng-model="user.city"
                        class="layui-input"/>
               </div>
             </div>
@@ -273,9 +273,12 @@
     });
 </script>
 <script>
+    layui.cache.user = {
+        uid: -1
+    };
   layui.config({
     version: "2.0.0"
-    , base: '/res/mods/'
+    , base: '../../res/mods/'
   }).extend({
     fly: 'index'
   }).use('user');

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j
 public class PostService {
+
     @Autowired
     private PostDao postDao;
 
@@ -31,12 +32,24 @@ public class PostService {
             postDao.save(post);
             log.info("发帖成功");
             return MyResult.action("/jie/index", "问题发布成功");
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.info("发帖失败" + e.toString());
         }
         return MyResult.error("系统错误，请重试");
     }
+
     public MyPost getPostById(Long id) {
         return postDao.findMyPostById(id);
+    }
+
+    public MyResult editPost(MyPost post) {
+        try {
+            post.preUpdate();
+            postDao.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getUpdateDate());
+            return MyResult.action("/jie/index", "问题编辑成功");
+        } catch (Exception ex) {
+            log.info("问题更新失败：" + ex.toString());
+        }
+        return MyResult.error("系统异常，请重试");
     }
 }

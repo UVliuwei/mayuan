@@ -68,8 +68,7 @@ public class UserService {
             saveUserRole(user.getId());
             return MyResult.action("/user/login", "注册成功");
         } catch (Exception ex) {
-            ex.printStackTrace();
-            log.info("用户注册更新异常");
+            log.info("用户注册更新异常: " + ex.toString());
         }
         return MyResult.error("系统异常,请重试");
     }
