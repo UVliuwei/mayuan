@@ -26,26 +26,6 @@
       </li>
     </ul>
     <ul class="layui-nav fly-nav-user">
-      <!-- 未登入的状态 -->
-      <shiro:guest>
-        <li class="layui-nav-item">
-          <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
-        </li>
-        <li class="layui-nav-item">
-          <a href="user/login.html">登入</a>
-        </li>
-        <li class="layui-nav-item">
-          <a href="user/reg.html">注册</a>
-        </li>
-        <li class="layui-nav-item layui-hide-xs">
-          <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})"
-             title="QQ登入" class="iconfont icon-qq"></a>
-        </li>
-        <li class="layui-nav-item layui-hide-xs">
-          <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})"
-             title="微博登入" class="iconfont icon-weibo"></a>
-        </li>
-      </shiro:guest>
       <!-- 登入后的状态 -->
       <shiro:user>
         <li class="layui-nav-item">
@@ -73,36 +53,11 @@
 </div>
 <div class="layui-container fly-marginTop fly-user-main">
   <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
-    <li class="layui-nav-item">
-      <a href="/user/${user.id }">
-        <i class="layui-icon">&#xe609;</i>
-        我的主页
-      </a>
-    </li>
-    <li class="layui-nav-item">
-      <a href="/user/index">
-        <i class="layui-icon">&#xe612;</i>
-        用户中心
-      </a>
-    </li>
-    <li class="layui-nav-item layui-this">
-      <a href="/user/set">
-        <i class="layui-icon">&#xe620;</i>
-        基本设置
-      </a>
-    </li>
-    <li class="layui-nav-item">
-      <a href="/user/post">
-        <i class="layui-icon">&#xe620;</i>
-        我的帖子
-      </a>
-    </li>
-    <li class="layui-nav-item">
-      <a href="/user/message">
-        <i class="layui-icon">&#xe611;</i>
-        我的消息
-      </a>
-    </li>
+    <li class="layui-nav-item"><a href="/user/${user.id }"><i class="layui-icon">&#xe609;</i>我的主页</a></li>
+    <li class="layui-nav-item"><a href="/user/index"><i class="layui-icon">&#xe612;</i>用户中心</a></li>
+    <li class="layui-nav-item layui-this"><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></li>
+    <li class="layui-nav-item"><a href="/user/post"><i class="layui-icon">&#xe620;</i>我的帖子</a></li>
+    <li class="layui-nav-item"><a href="/user/message"><i class="layui-icon">&#xe611;</i>我的消息</a></li>
   </ul>
 
   <div class="site-tree-mobile layui-hide">
@@ -249,7 +204,6 @@
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
-  debugger;
     var id = getUserId();
     var app = angular.module("app",[]);
     app.controller("infoController", function ($scope) {

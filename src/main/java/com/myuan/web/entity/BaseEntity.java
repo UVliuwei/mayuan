@@ -5,19 +5,19 @@ package com.myuan.web.entity;
  *
  */
 
+import com.myuan.web.utils.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
 //子类包含本类的属性
 @MappedSuperclass
 public class BaseEntity {
-
+    @Getter @Setter
     protected Date createDate;
+    @Getter @Setter
     protected Date updateDate;
     //格式化的日期
     @Transient
@@ -35,5 +35,9 @@ public class BaseEntity {
      */
     public void preUpdate() {
         this.updateDate = new Date();
+    }
+
+    public String getTime() {
+        return DateUtil.getDate(getCreateDate());
     }
 }

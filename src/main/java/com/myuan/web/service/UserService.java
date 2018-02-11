@@ -59,7 +59,7 @@ public class UserService {
                 return MyResult.error("邮箱已被注册");
             }
             user.preInsert();
-            user.setImg("1");
+            user.setImg("1.jpg");
             user.setKiss(200);
             user.setLocked("0");
             userDao.save(user);

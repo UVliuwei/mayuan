@@ -13,7 +13,6 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function 
             url: action,
             data: data.field,
             success: function (res) {
-                debugger;
                 if (res.status === "-1") {
                     layer.msg(res.msg, {
                         time: 2000,//2秒关闭（如果不配置，默认是3秒）
@@ -43,7 +42,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function 
 });
 
 function getUserId() {
-    var id = 0;
+    var id = -1;
     if(document.cookie.length>0) {
         var cookies = document.cookie.split(";");
         for(var i=0; i<cookies.length; i++) {

@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class DateUtil {
 	
-	public final static String getDate(Date startTime) throws ParseException {
+	public final static String getDate(Date startTime) {
 		
 		   long min=(new Date().getTime()-startTime.getTime())/1000;//除以1000转换成秒
 		   if(min<60) {

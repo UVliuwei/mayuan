@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>我的帖子</title>
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}"/>
+  <link rel="stylesheet" th:href="@{/res/css/global.css}"/>
+  <script th:src="@{https://cdn.bootcss.com/angular.js/1.6.3/angular.min.js}"></script>
+  <style type="text/css">ins.adsbygoogle {
+    display: none !important;
+    display: none
+  }</style>
+</head>
+<body>
+<div class="fly-header layui-bg-black">
+  <div class="layui-container"><a class="fly-logo" href="/"> <img src="//res.layui.com/images/fly/logo.png" alt="layui"> </a>
+    <ul class="layui-nav fly-nav layui-hide-xs">
+      <li class="layui-nav-item"><a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a></li>
+      <li class="layui-nav-item"><a href="/case/2018/"><i class="iconfont icon-iconmingxinganli"></i>案例</a></li>
+      <li class="layui-nav-item"><a href="http://www.layui.com/"><i class="iconfont icon-ui"></i>框架</a></li>
+    </ul>
+    <ul class="layui-nav fly-nav-user">
+      <!-- 登入后的状态 -->
+      <shiro:user>
+        <li class="layui-nav-item">
+          <a class="fly-nav-avatar" href="javascript:;">
+            <cite class="layui-hide-xs">贤心</cite>
+            <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
+            <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
+            <img
+                src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"/>
+          </a>
+          <dl class="layui-nav-child">
+            <dd><a href="user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+            <dd><a href="user/message.html"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a>
+            </dd>
+            <dd><a href="user/home.html"><i class="layui-icon"
+                                            style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+            </dd>
+            <hr style="margin: 5px 0;"/>
+            <dd><a href="/user/logout/" style="text-align: center;">退出</a></dd>
+          </dl>
+        </li>
+      </shiro:user>
+    </ul>
+  </div>
+</div>
+<div class="layui-container fly-marginTop fly-user-main">
+  <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+    <li class="layui-nav-item"><a href="/user/${user.id }"><i class="layui-icon">&#xe609;</i>我的主页</a></li>
+    <li class="layui-nav-item"><a href="/user/index"><i class="layui-icon">&#xe612;</i>用户中心</a></li>
+    <li class="layui-nav-item"><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></li>
+    <li class="layui-nav-item  layui-this"><a href="/user/post"><i class="layui-icon">&#xe620;</i>我的帖子</a></li>
+    <li class="layui-nav-item"><a href="/user/message"><i class="layui-icon">&#xe611;</i>我的消息</a></li>
+  </ul>
+  <div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
+  <div class="site-mobile-shade"></div>
+  <div class="fly-panel fly-panel-user" pad20>
+    <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_uc">
+      <ul class="layui-tab-title" id="LAY_mine">
+        <li lay-id="index" class="layui-this">我发的帖</li>
+        <li lay-id="collection">我收藏的帖</li>
+      </ul>
+      <div class="layui-tab-content" style="padding: 5px 0;">
+        <div class="layui-tab-item layui-show">
+          <table class="layui-hide" id="LAY_mySendCard"></table>
+        </div>
+        <div class="layui-tab-item">
+          <table class="layui-hide" id="LAY_myCollectioncard"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/res/mods/form.js}"></script>
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+    var id = getUserId();
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#LAY_mySendCard'
+            , url: '/api/posts/user/' + id //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'title', title: '帖子标题', width : 320, templet: '<div><a href="/jie/detail/{{d.id}}" class="layui-table-link">{{d.title}}</a></div>'}
+                , {field: 'ended', title: '结贴', templet: '#end'}
+                , {field: '', title: '数据' ,templet:'<div>{{d.popularity}}阅/{{d.ansnum}}答</div>' }
+                , {field: '', title: '操作', templet:'<div><a class="layui-btn layui-btn-xs"  href="/jie/edit/{{d.id}}" target="_blank">编辑</a></div>'}
+            ]]
+        });
+        table.render({
+            elem: '#LAY_myCollectioncard'
+            , url: '/api/collections/user/' + id //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'title', title: '帖子标题', width : 750, templet: '<div><a href="/jie/detail/{{d.id}}" class="layui-table-link">{{d.title}}</a></div>'}
+                , {field: 'time', title: '收藏时间', }
+            ]]
+        });
+    });
+</script>
+<script id="end", type="text/html">
+  {{#  if(d.ended == '1'){ }}
+   <span style="color: #5FB878;">已结</span>
+  {{#  } else { }}
+    <span style="color: #cccccc;">未结</span>
+  {{#  } }}
+</script>
+<script>
+    layui.cache.user = {
+        uid: -1
+    };
+    layui.config({
+        version: "3.0.0"
+        , base: '../../res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('user');
+</script>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.myuan.web.controller;
 
+import com.myuan.web.entity.MyPost;
 import com.myuan.web.service.PostService;
+import com.myuan.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ public class IndexController {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("user/{path}")
     public String user(@PathVariable("path") String path) {
@@ -34,6 +38,13 @@ public class IndexController {
     public String getPost(@PathVariable("id") Long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "jie/edit";
+    }
+    @GetMapping("jie/detail/{id}")
+    public String getPostDetail(@PathVariable("id") Long id, Model model) {
+        MyPost post = postService.getPostById(id);
+        model.addAttribute("post", post);
+        model.addAttribute("user", userService.getUserById(post.getUserId()));
+        return "jie/detail";
     }
 
 }

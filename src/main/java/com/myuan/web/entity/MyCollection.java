@@ -17,7 +17,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 @Data
 @Entity
-public class MyCollection implements Serializable {
+public class MyCollection extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -8218131001857860120L;
 
@@ -26,8 +26,8 @@ public class MyCollection implements Serializable {
     //自增长主键
     private Long id;
 
-    private String userId;
+    private Long userId;
 
-    private String postId;
+    private Long postId;
 
 }
