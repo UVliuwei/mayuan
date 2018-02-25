@@ -65,13 +65,13 @@ public class MyShiroRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-        String email = token.getUsername();
-        MyUser user = userService.getUserByEmail(email);
+        String name = token.getUsername();
+        MyUser user = userService.getUserByName(name);
 		if(user!=null) {
 			if("1".equals(user.getLocked())) {
 	        	throw new LockedAccountException();
 	        } else {
-	        	return new SimpleAuthenticationInfo(user.getEmail(), user.getPassword(), getName());
+	        	return new SimpleAuthenticationInfo(user.getName(), user.getPassword(), getName());
 	        }
 	    } else {
 	       throw new UnknownAccountException();
