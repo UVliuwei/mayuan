@@ -53,20 +53,29 @@ public class AnswerController {
 
         return answerService.findAnswers(postId, page, limit);
     }
+
     @ApiOperation(value = "未读消息", notes = "未读消息")
     @GetMapping("user/{id}/messages")
     public MyResult message(@PathVariable("id") Long id) {
         return answerService.findUserMessage(id);
     }
+
     @ApiOperation(value = "删除消息", notes = "删除消息")
     @DeleteMapping("message/{id}")
     public MyResult deleteMessage(@PathVariable("id") Long id) {
         return answerService.deleteMessage(id);
     }
+
     @ApiOperation(value = "删除用户全部消息", notes = "删除用户全部消息")
     @DeleteMapping("/user/{id}/messages")
     public MyResult deleteUserMessages(@PathVariable("id") Long id) {
         return answerService.deleteMessages(id);
+    }
+
+    @ApiOperation(value = "删除回答", notes = "删除回答")
+    @DeleteMapping("answer/{id}/{flag}")
+    public MyResult deleteAnswer(@PathVariable("id") Long id,@PathVariable("flag") String flag) {
+        return answerService.deleteAnswer(id, flag);
     }
 
 }

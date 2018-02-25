@@ -70,7 +70,7 @@ public class PostService {
         Sort sort = new Sort(Direction.DESC, "createDate");
         Pageable pageable = new PageRequest(page - 1, limit, sort);
         Page<MyPost> postPage = postDao.findMyPostsByUserId(userId, pageable);
-        if(postPage.getTotalElements() == 0) {
+        if (postPage.getTotalElements() == 0) {
             object.put("code", "0");
             object.put("msg", "");
             object.put("count", "0");
@@ -96,11 +96,23 @@ public class PostService {
         postDao.updateTop(id, type, new Date());
         return MyResult.ok("");
     }
+
     /**
      * <liuwei> [2018/2/11 14:01] 加精，取消加精
      */
     public MyResult updateBoutique(Long id, String type) {
         postDao.updateBoutique(id, type, new Date());
         return MyResult.ok("");
+    }
+
+    /**
+     * <liuwei> [2018/2/25 15:06] 采纳最佳答案
+     */
+    public MyResult updateAccepted(Long postId, Long ansId) {
+        postDao.updateAccepted(postId, ansId, new Date());
+        return MyResult.ok("");
+    }
+    public void removeAccept(Long ansId) {
+        postDao.removePostAccept(ansId);
     }
 }

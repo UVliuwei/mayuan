@@ -16,36 +16,7 @@
 
 <div th:replace="/common/header::header"></div>
 
-<div class="layui-hide-xs">
-  <div class="fly-panel fly-column">
-    <div class="layui-container">
-      <ul class="layui-clear">
-        <li class="layui-hide-xs"><a href="/">首页</a></li>
-        <li class="layui-this"><a href="">提问</a></li>
-        <li><a href="">分享<span class="layui-badge-dot"></span></a></li>
-        <li><a href="">讨论</a></li>
-        <li><a href="">建议</a></li>
-        <li><a href="">公告</a></li>
-        <li><a href="">动态</a></li>
-        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
-
-        <!-- 用户登入后显示 -->
-        <shiro:user>
-          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post#index">我发表的贴</a></li>
-          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post#collection">我收藏的贴</a></li>
-        </shiro:user>
-      </ul>
-
-      <div class="fly-column-right layui-hide-xs">
-        <span class="fly-search"><i class="layui-icon"></i></span>
-        <a href="add.html" class="layui-btn">发表新帖</a>
-      </div>
-      <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
-        <a href="add.html" class="layui-btn">发表新帖</a>
-      </div>
-    </div>
-  </div>
-</div>
+<div th:replace="/common/column::column"></div>
 
 <div class="layui-container">
   <div class="layui-row layui-col-space15">
@@ -120,7 +91,7 @@
 
         <ul class="jieda" id="jieda">
           <div th:each="answer:${page.list}">
-            <li data-id="answer.id" class="jieda-daan">
+            <li data-th-id="${answer.id}" class="jieda-daan">
               <a name="item"></a>
               <div class="detail-about detail-about-reply">
                 <a class="fly-avatar" th:href="'/user/'+${answer.userId}+'/info'">
@@ -138,7 +109,7 @@
                   <span th:text="${answer.time}"></span>
                 </div>
 
-                <i class="iconfont icon-caina" title="最佳答案"></i>
+                <i th:if="${post.acceptId == answer.id}" class="iconfont icon-caina" title="最佳答案"></i>
               </div>
               <div name="detail" class="detail-body jieda-body photos" th:text="${answer.content}">
               </div>
@@ -152,9 +123,8 @@
                 回复
               </span>
                 <div class="jieda-admin">
-                  <span type="edit">编辑</span>
-                  <span type="del">删除</span>
-                  <span class="jieda-accept" type="accept">采纳</span>
+                  <span th:if="${session.user==null?fasle:session.user.id==answer.userId}" type="del">删除</span>
+                  <span th:if="${session.user==null?fasle:session.user.id==answer.userId && post.ended == '0'}" class="jieda-accept" type="accept">采纳</span>
                 </div>
               </div>
             </li>
@@ -164,7 +134,7 @@
           <input type="hidden" id="pageNum" th:value="${page.pageNum}">
           <div id="add"></div>
           <!-- 无数据时 -->
-          <li id="reply" class="fly-none layui-hide">消灭零回复</li>
+          <li id="reply" class="fly-none">消灭零回复</li>
         </ul>
         <div style="text-align: center" id="page"></div>
         <div class="layui-form layui-form-pane">
@@ -283,6 +253,7 @@
             var pageSize = 6;  //每页条数
             //分页
             if(totalCount > 0) {
+                $("#reply").addClass("layui-hide");
                 laypage.render({
                     elem: 'page'
                     ,count: totalCount

@@ -39,4 +39,14 @@ public interface PostDao extends BaseDao<MyPost> {
     @Transactional
     @Query("update MyPost post set post.boutiqued = ?2, post.updateDate = ?3 where post.id = ?1")
     void updateBoutique(Long id, String type, Date date);
+
+    @Modifying
+    @Transactional
+    @Query("update MyPost post set post.acceptId = ?2, post.updateDate = ?3 , post.ended = '1' where post.id = ?1")
+    void updateAccepted(Long postId,Long ansId, Date date);
+
+    @Modifying
+    @Transactional
+    @Query("update MyPost post set post.ended = '0', post.ansnum = post.ansnum - 1 where post.acceptId = ?1")
+    void removePostAccept(Long ansId);
 }

@@ -202,56 +202,35 @@ layui.define('fly', function (exports) {
             dom.content.val(aite + ' ' + val);
         }
         , accept: function (li) { //采纳
+            var cdiv = $('.fly-admin-box');
+            var cid = cdiv.attr('id');
             var othis = $(this);
+            var id = li.attr('id');
             layer.confirm('是否采纳该回答为最佳答案？', function (index) {
                 layer.close(index);
-                fly.json('/api/jieda-accept/', {
-                    id: li.data('id')
+                fly.json('/api/post/' + cid + "/accepted/" + id, {
                 }, function (res) {
-                    if (res.status === 0) {
+                    if (res.status == '1') {
                         $('.jieda-accept').remove();
                         li.addClass('jieda-daan');
                         li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
                     } else {
                         layer.msg(res.msg);
                     }
-                });
-            });
-        }
-        , edit: function (li) { //编辑
-            fly.json('/jie/getDa/', {
-                id: li.data('id')
-            }, function (res) {
-                var data = res.rows;
-                layer.prompt({
-                    formType: 2
-                    , value: data.content
-                    , maxlength: 100000
-                    , title: '编辑回帖'
-                    , area: ['728px', '300px']
-                    , success: function (layero) {
-                        fly.layEditor({
-                            elem: layero.find('textarea')
-                        });
-                    }
-                }, function (value, index) {
-                    fly.json('/jie/updateDa/', {
-                        id: li.data('id')
-                        , content: value
-                    }, function (res) {
-                        layer.close(index);
-                        li.find('.detail-body').html(fly.content(value));
-                    });
-                });
+                },{type : 'put'});
             });
         }
         , del: function (li) { //删除
             layer.confirm('确认删除该回答么？', function (index) {
                 layer.close(index);
-                fly.json('/api/jieda-delete/', {
-                    id: li.data('id')
+                var id = li.attr('id');
+                var flag = 'false';
+                if (li.hasClass('jieda-daan')) {
+                    flag = 'true';
+                }
+                fly.json('/api/answer/' + id + '/' + flag, {
                 }, function (res) {
-                    if (res.status === 0) {
+                    if (res.status == '1') {
                         var count = dom.jiedaCount.text() | 0;
                         dom.jiedaCount.html(--count);
                         li.remove();
@@ -262,7 +241,7 @@ layui.define('fly', function (exports) {
                     } else {
                         layer.msg(res.msg);
                     }
-                });
+                },{type : 'delete'});
             });
         }
     };

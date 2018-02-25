@@ -79,4 +79,9 @@ public class PostController extends BaseController {
         return postService.updateBoutique(id, type);
     }
 
+    @PutMapping("post/{id}/accepted/{ansId}")
+    @ApiOperation(value = "求解采纳", notes = "求解采纳")
+    public MyResult updateAccepted(@PathVariable("id") Long postId,@PathVariable("ansId") Long ansId) {
+        return postService.updateAccepted(postId, ansId);
+    }
 }

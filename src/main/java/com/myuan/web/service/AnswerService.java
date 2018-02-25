@@ -105,6 +105,19 @@ public class AnswerService {
         replyDao.deleteAllByReplyId(userId);
         return MyResult.ok("");
     }
+    @Transactional
+    public MyResult deleteAnswer(Long id, String flag) {
+        try {
+            answerDao.deleteById(id);
+            if("true".equals(flag)) {
+                postService.removeAccept(id);
+            }
+            return MyResult.ok("");
+        } catch (Exception e) {
+            log.info("回答删除失败：" + e.toString());
+        }
+        return MyResult.error("系统异常，请重试");
+    }
     /**
      * <liuwei> [2018/2/24 14:08] 回复分页
      */
