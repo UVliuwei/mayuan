@@ -23,7 +23,6 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
     ,minemsg: $('#LAY_minemsg')
     ,infobtn: $('#LAY_btninfo')
   };
-
   //我的相关数据
   var elemUC = $('#LAY_uc'), elemUCM = $('#LAY_ucm');
   gather.minelog = {};
@@ -297,15 +296,15 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
   //我的消息
   gather.minemsg = function(){
     var delAll = $('#LAY_delallmsg')
-    ,tpl = '{{# var len = d.rows.length;\
+    ,tpl = '{{# var len = d.length;\
     if(len === 0){ }}\
       <div class="fly-none">您暂时没有最新消息</div>\
     {{# } else { }}\
       <ul class="mine-msg">\
       {{# for(var i = 0; i < len; i++){ }}\
-        <li data-id="{{d.rows[i].id}}">\
-          <blockquote class="layui-elem-quote">{{ d.rows[i].content}}</blockquote>\
-          <p><span>{{d.rows[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger fly-delete">删除</a></p>\
+        <li data-id="{{d[i].id}}">\
+          <blockquote class="layui-elem-quote"><a href="/user/{{d[i].userId}}/info" target="_blank"><cite>{{d[i].userName}}</cite></a>回答了您的求解<a target="_blank" href="/jie/detail/{{d[i].postId}}"><cite>{{d[i].postName}}</cite></a></blockquote>\
+          <p><span>{{d[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger fly-delete">删除</a></p>\
         </li>\
       {{# } }}\
       </ul>\
@@ -315,44 +314,44 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
         dom.minemsg.html('<div class="fly-none">您暂时没有最新消息</div>');
       }
     }
-    
-    
-    /*
-    fly.json('/message/find/', {}, function(res){
-      var html = laytpl(tpl).render(res);
+
+      var userId = layui.cache.user.uid;
+      var options = {type : 'get'};
+    fly.json('/api/user/'+userId+'/messages', {}, function(res){
+        var s = $.parseJSON(res.data);
+      var html = laytpl(tpl).render(s);
       dom.minemsg.html(html);
-      if(res.rows.length > 0){
+      if(s.length > 0){
         delAll.removeClass('layui-hide');
       }
-    });
-    */
+    },options);
+
     
     //阅读后删除
     dom.minemsg.on('click', '.mine-msg li .fly-delete', function(){
       var othis = $(this).parents('li'), id = othis.data('id');
-      fly.json('/message/remove/', {
-        id: id
+      fly.json('/api/message/'+id, {
       }, function(res){
-        if(res.status === 0){
+        if(res.status == '1'){
           othis.remove();
           delEnd();
         }
-      });
+      },{type : 'delete'});
     });
 
     //删除全部
     $('#LAY_delallmsg').on('click', function(){
       var othis = $(this);
       layer.confirm('确定清空吗？', function(index){
-        fly.json('/message/remove/', {
+        fly.json('/api/user/' + userId + '/messages', {
           all: true
         }, function(res){
-          if(res.status === 0){
+          if(res.status == '1'){
             layer.close(index);
             othis.addClass('layui-hide');
             delEnd(true);
           }
-        });
+        },{type : 'delete'});
       });
     });
 

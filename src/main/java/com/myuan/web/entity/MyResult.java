@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Data
 public class MyResult {
 
-    //-1 失败 、 0 成功
+    //-1 失败 、 1 成功
     private String status;
     private String msg;
     //json格式的返回数据

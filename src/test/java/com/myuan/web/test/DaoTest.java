@@ -3,6 +3,7 @@ package com.myuan.web.test;
 import com.myuan.web.WebApplication;
 import com.myuan.web.dao.UserDao;
 import com.myuan.web.entity.MyUser;
+import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,12 @@ public class DaoTest {
     @Test
     public void testDao() {
         MyUser user = userDao.findMyUsersByName("宿久丶");
+    }
+
+    public static void main(String []args) {
+        String s = "@123";
+        String reg = "@.*";
+        boolean matches = Pattern.matches(reg, s);
+        System.out.println(matches);
     }
 }

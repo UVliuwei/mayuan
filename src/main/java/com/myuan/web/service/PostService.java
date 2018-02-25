@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.myuan.web.dao.PostDao;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j;
@@ -69,6 +70,13 @@ public class PostService {
         Sort sort = new Sort(Direction.DESC, "createDate");
         Pageable pageable = new PageRequest(page - 1, limit, sort);
         Page<MyPost> postPage = postDao.findMyPostsByUserId(userId, pageable);
+        if(postPage.getTotalElements() == 0) {
+            object.put("code", "0");
+            object.put("msg", "");
+            object.put("count", "0");
+            object.put("data", new ArrayList<MyPost>());
+            return object;
+        }
         object.put("code", "0");
         object.put("msg", "");
         object.put("count", postPage.getTotalElements() + "");

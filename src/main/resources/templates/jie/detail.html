@@ -33,10 +33,10 @@
           <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
         </li>
         <li class="layui-nav-item">
-          <a href="user/login.html">登入</a>
+          <a href="/user/login">登入</a>
         </li>
         <li class="layui-nav-item">
-          <a href="user/reg.html">注册</a>
+          <a href="/user/reg">注册</a>
         </li>
         <li class="layui-nav-item layui-hide-xs">
           <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>
@@ -85,8 +85,10 @@
         <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
 
         <!-- 用户登入后显示 -->
-        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="../user/index.html">我发表的贴</a></li>
-        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="../user/index.html#collection">我收藏的贴</a></li>
+        <shiro:user>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post#index">我发表的贴</a></li>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post#collection">我收藏的贴</a></li>
+        </shiro:user>
       </ul>
 
       <div class="fly-column-right layui-hide-xs">
@@ -172,94 +174,56 @@
         </fieldset>
 
         <ul class="jieda" id="jieda">
-          <li data-id="111" class="jieda-daan">
-            <a name="item-1111111111"></a>
-            <div class="detail-about detail-about-reply">
-              <a class="fly-avatar" href="">
-                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-              </a>
-              <div class="fly-detail-user">
-                <a href="" class="fly-link">
-                  <cite>贤心</cite>
-                  <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                  <i class="layui-badge fly-badge-vip">VIP3</i>
+          <div th:each="answer:${page.list}">
+            <li data-id="answer.id" class="jieda-daan">
+              <a name="item"></a>
+              <div class="detail-about detail-about-reply">
+                <a class="fly-avatar" th:href="'/user/'+${answer.userId}+'/info'">
+                  <img th:src="@{/images/{img}(img=${answer.userImg})}">
                 </a>
+                <div class="fly-detail-user">
+                  <a href="" class="fly-link">
+                    <cite><span th:text="${answer.userName}"></span></cite>
+                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                    <i class="layui-badge fly-badge-vip">VIP3</i>
+                  </a>
+                </div>
 
-                <span>(楼主)</span>
-                <!--
-                <span style="color:#5FB878">(管理员)</span>
-                <span style="color:#FF9E3F">（社区之光）</span>
-                <span style="color:#999">（该号已被封）</span>
-                -->
+                <div class="detail-hits">
+                  <span th:text="${answer.time}"></span>
+                </div>
+
+                <i class="iconfont icon-caina" title="最佳答案"></i>
               </div>
-
-              <div class="detail-hits">
-                <span>2017-11-30</span>
+              <div name="detail" class="detail-body jieda-body photos" th:text="${answer.content}">
               </div>
-
-              <i class="iconfont icon-caina" title="最佳答案"></i>
-            </div>
-            <div class="detail-body jieda-body photos">
-              <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
-            </div>
-            <div class="jieda-reply">
+              <div class="jieda-reply">
               <span class="jieda-zan zanok" type="zan">
                 <i class="iconfont icon-zan"></i>
-                <em>66</em>
+                <em><span th:text="${answer.likes}"></span></em>
               </span>
-              <span type="reply">
+                <span type="reply">
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-              <div class="jieda-admin">
-                <span type="edit">编辑</span>
-                <span type="del">删除</span>
-                <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                <div class="jieda-admin">
+                  <span type="edit">编辑</span>
+                  <span type="del">删除</span>
+                  <span class="jieda-accept" type="accept">采纳</span>
+                </div>
               </div>
-            </div>
-          </li>
-
-          <li data-id="111">
-            <a name="item-1111111111"></a>
-            <div class="detail-about detail-about-reply">
-              <a class="fly-avatar" href="">
-                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-              </a>
-              <div class="fly-detail-user">
-                <a href="" class="fly-link">
-                  <cite>贤心</cite>
-                </a>
-              </div>
-              <div class="detail-hits">
-                <span>2017-11-30</span>
-              </div>
-            </div>
-            <div class="detail-body jieda-body photos">
-              <p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>
-            </div>
-            <div class="jieda-reply">
-              <span class="jieda-zan" type="zan">
-                <i class="iconfont icon-zan"></i>
-                <em>0</em>
-              </span>
-              <span type="reply">
-                <i class="iconfont icon-svgmoban53"></i>
-                回复
-              </span>
-              <div class="jieda-admin">
-                <span type="edit">编辑</span>
-                <span type="del">删除</span>
-                <span class="jieda-accept" type="accept">采纳</span>
-              </div>
-            </div>
-          </li>
-
+            </li>
+          </div>
+          <input type="hidden" id="totalCount" th:value="${page.count}">
+          <input type="hidden" id="currentPage" th:value="${page.currentPage}">
+          <input type="hidden" id="pageNum" th:value="${page.pageNum}">
+          <div id="add"></div>
           <!-- 无数据时 -->
-          <!-- <li class="fly-none">消灭零回复</li> -->
+          <li id="reply" class="fly-none layui-hide">消灭零回复</li>
         </ul>
-
+        <div style="text-align: center" id="page"></div>
         <div class="layui-form layui-form-pane">
-          <form action="/jie/reply/" method="post">
+          <form id="answerInfo">
             <div class="layui-form-item layui-form-text">
               <a name="comment"></a>
               <div class="layui-input-block">
@@ -268,8 +232,9 @@
               </div>
             </div>
             <div class="layui-form-item">
-              <input type="hidden" name="jid" value="123">
-              <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
+              <input type="hidden" id="postId" name="postId" th:value="${post.id}">
+              <input type="hidden" id="userId" name="userId">
+              <button class="layui-btn" type="button" onclick="answerSubmit(this)">提交回复</button>
             </div>
           </form>
         </div>
@@ -320,9 +285,9 @@
         </dd>
 
         <!-- 无数据时 -->
-        <!--
+
         <div class="fly-none">没有相关数据</div>
-        -->
+
       </dl>
 
       <div class="fly-panel">
@@ -336,7 +301,7 @@
       </div>
 
       <div class="fly-panel" style="padding: 20px 0; text-align: center;">
-        <img src="../../res/images/weixin.jpg" style="max-width: 100%;" alt="layui">
+
         <p style="position: relative; color: #666;">微信扫码关注 layui 公众号</p>
       </div>
 
@@ -344,27 +309,93 @@
   </div>
 </div>
 <script th:src="@{/res/mods/form.js}"></script>
+<script th:src="@{/res/mods/jquery.js}"></script>
 <script>
-    layui.cache.page = 'jie';
+
+    var userId = getUserId();
+    $("#userId").val(userId);
     layui.cache.user = {
-        uid: getUserId()
+        uid: userId
     };
     layui.config({
-        version: "2.0.0"
-        , base: '../../res/mods/'
+        version: "3.0.0"
+        , base: '/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly', function () {
+    }).use('jie', function () {
         var fly = layui.fly;
-        //如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
-        /*
-        $('.detail-body').each(function(){
-          var othis = $(this), html = othis.html();
-          othis.html(fly.content(html));
+        layui.use(['laypage'], function () {
+            var laypage = layui.laypage;
+            var $ = layui.jquery;
+            $("[name='detail']").each(function(){
+                var othis = $(this), html = othis.html();
+                othis.html(fly.content(html));
+            });
+            var currentPage = $("#currentPage").val(); //当前页
+            var pageNum = $("#pageNum").val(); //总页数
+            var totalCount = $("#totalCount").val();  //查询总条数
+            var pageSize = 6;  //每页条数
+            //分页
+            if(totalCount > 0) {
+                laypage.render({
+                    elem: 'page'
+                    ,count: totalCount
+                    ,groups:3
+                    ,limit:6
+                    ,curr: currentPage
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            var postId = $("#postId").val();
+                            window.location.href = "/jie/detail/" + postId + "/" + obj.curr;
+                        }
+                    }
+                });
+            }
         });
-        */
     });
 </script>
+<script>
+    function answerSubmit(e) {
+        var id = $("#userId").val();
+        var content = $("#L_content").val();
+        if (id == "-1") {
+            layer.msg("未登录");
+            return;
+        }
+        if (content == '') {
+            layer.msg("回答内容不能为空", {icon: 2, time: 1000, shade: 0.1, offset: '300px'}, function () {
+            });
+            return;
+        }
 
+        $.ajax({
+            type: "POST",
+            url: "/api/answer",
+            data: $("#answerInfo").serialize(),
+            success: function (res) {
+                if (res.status == "-1") {
+                    layer.msg("回复失败", {anim: 6, time: 1000, shade: 0.1, offset: '300px'}, function () {
+                    });
+                } else {
+                    $("#reply").addClass("layui-hide");
+                    addHtml(res.data);
+                    e.style.backgroundColor = "#c2c2c2";
+                    e.disabled = "true";
+                    $("#L_content").val("");
+                }
+
+            }
+        });
+    }
+
+    function addHtml(html) {
+        var fly = layui.fly;
+        $("#add").append(html);
+        $("#ahtml").each(function () {
+            var othis = $(this), html = othis.html();
+            othis.html(fly.content(html));
+        });
+    }
+</script>
 </body>
 </html>

@@ -110,12 +110,13 @@
   {{#  } }}
 </script>
 <script>
+    var userId = getUserId();
     layui.cache.user = {
-        uid: -1
+        uid: userId
     };
     layui.config({
         version: "3.0.0"
-        , base: '../../res/mods/'
+        , base: '/res/mods/'
     }).extend({
         fly: 'index'
     }).use('user');

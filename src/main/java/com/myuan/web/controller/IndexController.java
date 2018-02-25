@@ -1,6 +1,7 @@
 package com.myuan.web.controller;
 
 import com.myuan.web.entity.MyPost;
+import com.myuan.web.service.AnswerService;
 import com.myuan.web.service.PostService;
 import com.myuan.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import springfox.documentation.annotations.ApiIgnore;
 
 /*
@@ -23,6 +25,8 @@ public class IndexController {
     private PostService postService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AnswerService answerService;
 
     @GetMapping("user/{path}")
     public String user(@PathVariable("path") String path) {
@@ -39,12 +43,25 @@ public class IndexController {
         model.addAttribute("post", postService.getPostById(id));
         return "jie/edit";
     }
+
     @GetMapping("jie/detail/{id}")
-    public String getPostDetail(@PathVariable("id") Long id, Model model) {
+    public String getPostDetail(@PathVariable("id") Long id, Model model,
+                    @RequestParam(required = false, defaultValue = "1") Integer page,
+                    @RequestParam(required = false, defaultValue = "6") Integer limit) {
         MyPost post = postService.getPostById(id);
         model.addAttribute("post", post);
+        model.addAttribute("page", answerService.findAnswers(id, page, limit));
         model.addAttribute("user", userService.getUserById(post.getUserId()));
         return "jie/detail";
     }
-
+    @GetMapping("jie/detail/{id}/{page}")
+    public String getPostDetailPage(@PathVariable("id") Long id, Model model,
+                    @PathVariable("page") Integer page,
+        @RequestParam(required = false, defaultValue = "6") Integer limit) {
+        MyPost post = postService.getPostById(id);
+        model.addAttribute("post", post);
+        model.addAttribute("page", answerService.findAnswers(id, page, limit));
+        model.addAttribute("user", userService.getUserById(post.getUserId()));
+        return "jie/detail";
+    }
 }

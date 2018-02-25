@@ -26,9 +26,9 @@ public class MyAnswer extends BaseEntity implements Serializable{
     //自增长主键
     private Long id;
 
-    private String postId;
+    private Long postId;
 
-    private String userId;
+    private Long userId;
 
     private String userImg;
 

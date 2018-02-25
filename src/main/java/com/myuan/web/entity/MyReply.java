@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  * 回复类
  */
 
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,19 +28,18 @@ public class MyReply extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //自增长主键
     private Long id;
-
-    private String userId;
+    @NotNull
+    //回复人的id
+    private Long userId;
 
     private String userName;
-
-    private String postId;
+    @NotNull
+    private Long postId;
 
     private String postName;
-
-    private Date repltTime;
-
-    private String time;
-
+    //被回复人的id
+    private Long replyId;
+    @NotNull
     private String replyName;
 
 }

@@ -69,7 +69,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
         data: data,
         url: url,
         success: function(res){
-          if(res.status === 0) {
+          if(res.status == '1') {
             success && success(res);
           } else {
             layer.msg(res.msg || res.code, {shift: 6});
@@ -278,22 +278,20 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
     
     //新消息通知
     ,newmsg: function(){
+      var options = {type : 'get'};
       var elemUser = $('.fly-nav-user');
       if(layui.cache.user.uid !== -1 && elemUser[0]){
-        fly.json('/message/nums/', {
-          _: new Date().getTime()
+        fly.json('/api/message/nums', {
+          _: new Date().getTime(),
+            userId : layui.cache.user.uid
         }, function(res){
-          if(res.status === 0 && res.count > 0){
-            var msg = $('<a class="fly-nav-msg" href="javascript:;">'+ res.count +'</a>');
+          if(res.data != '0'){
+            var msg = $('<a class="fly-nav-msg" href="javascript:;">'+ res.data +'</a>');
             elemUser.append(msg);
             msg.on('click', function(){
-              fly.json('/message/read', {}, function(res){
-                if(res.status === 0){
-                  location.href = '/user/message/';
-                }
-              });
+              location.href = '/user/message';
             });
-            layer.tips('你有 '+ res.count +' 条未读消息', msg, {
+            layer.tips('你有 '+ res.data +' 条未读消息', msg, {
               tips: 3
               ,tipsMore: true
               ,fixed: true
@@ -302,7 +300,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
               layer.closeAll('tips');
             })
           }
-        });
+        }, options);
       }
       return arguments.callee;
     }

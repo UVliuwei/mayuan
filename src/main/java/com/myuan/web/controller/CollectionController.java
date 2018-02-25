@@ -53,6 +53,6 @@ public class CollectionController {
         @RequestParam(required = false, defaultValue = "1") Integer page,
         @RequestParam(required = false, defaultValue = "10") Integer limit) {
 
-        return collectionService.fandUserCollections(userId, page, limit);
+        return collectionService.findUserCollections(userId, page, limit);
     }
 }
