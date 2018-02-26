@@ -1,10 +1,12 @@
 package com.myuan.web.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.myuan.web.dao.PostDao;
 import com.myuan.web.entity.MyAnswer;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
+import com.myuan.web.utils.DateUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +48,7 @@ public class PostService {
             post.setEnded("0");
             postDao.save(post);
             log.info("发帖成功");
-            return MyResult.action("/jie/index", "问题发布成功");
+            return MyResult.action("/jie/index", "求解发布成功");
         } catch (Exception e) {
             log.info("发帖失败" + e.toString());
         }
@@ -142,5 +144,16 @@ public class PostService {
      */
     public void addPostAnsNum(Long id) {
         postDao.addPostAnsnum(id);
+    }
+
+    /**
+     * <liuwei> [2018/2/26 10:45] 本周热议
+     */
+    public List<MyPost> getTopPost() {
+        Sort sort = new Sort(Direction.DESC, "ansnum");
+        Pageable pageable = new PageRequest(0, 15, sort);
+        Date date = DateUtil.getThisWeek();
+        Page<MyPost> posts = postDao.findByCreateDateAfter(date, pageable);
+        return posts.getContent();
     }
 }

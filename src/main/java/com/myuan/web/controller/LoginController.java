@@ -6,7 +6,6 @@ import com.myuan.web.service.UserService;
 import com.myuan.web.utils.SaltPasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.log4j.Log4j;
@@ -54,9 +53,9 @@ public class LoginController extends BaseController {
         } catch (Exception e) {
             return MyResult.error("用户名或密码错误");
         }
-        setUserSession(user,response);
+        setUserSession(user, response);
         log.info(email + " : 登陆成功");
-        return MyResult.action("/user/set", "登录成功");
+        return MyResult.action("/user/index", "登录成功");
     }
 
     /**

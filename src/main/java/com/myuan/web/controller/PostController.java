@@ -6,6 +6,7 @@ import com.myuan.web.entity.MyResult;
 import com.myuan.web.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -83,5 +84,10 @@ public class PostController extends BaseController {
     @ApiOperation(value = "求解采纳", notes = "求解采纳")
     public MyResult updateAccepted(@PathVariable("id") Long postId,@PathVariable("ansId") Long ansId) {
         return postService.updateAccepted(postId, ansId);
+    }
+    @GetMapping("/post/top")
+    @ApiOperation(value = "本周热议", notes = "本周热议")
+    public List<MyPost> getPostTop() {
+        return postService.getTopPost();
     }
 }

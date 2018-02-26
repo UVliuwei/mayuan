@@ -5,6 +5,8 @@ import com.myuan.web.entity.MyPost;
 import com.myuan.web.service.AnswerService;
 import com.myuan.web.service.PostService;
 import com.myuan.web.service.UserService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,9 @@ public class IndexController {
     @Autowired
     private AnswerService answerService;
 
+    @GetMapping(value = {"/", "index"})
+    public String index() {return "index";}
+
     @GetMapping("user/{path}")
     public String user(@PathVariable("path") String path) {
         return ("user/" + path);
@@ -36,7 +41,7 @@ public class IndexController {
 
     @GetMapping("user/{id}/info")
     public String userInfo(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user",userService.getUserById(id));
+        model.addAttribute("user", userService.getUserById(id));
         JSONObject posts = postService.findUserPosts(id, 1, 30);
         model.addAttribute("posts", posts.get("data"));
         model.addAttribute("answers", answerService.findUserAnswers(id));
@@ -56,8 +61,8 @@ public class IndexController {
 
     @GetMapping("jie/detail/{id}")
     public String getPostDetail(@PathVariable("id") Long id, Model model,
-                    @RequestParam(required = false, defaultValue = "1") Integer page,
-                    @RequestParam(required = false, defaultValue = "6") Integer limit) {
+        @RequestParam(required = false, defaultValue = "1") Integer page,
+        @RequestParam(required = false, defaultValue = "6") Integer limit) {
         MyPost post = postService.getPostById(id);
         model.addAttribute("post", post);
         model.addAttribute("page", answerService.findAnswers(id, page, limit));
@@ -65,9 +70,10 @@ public class IndexController {
         postService.addPostPopularity(id);
         return "jie/detail";
     }
+
     @GetMapping("jie/detail/{id}/{page}")
     public String getPostDetailPage(@PathVariable("id") Long id, Model model,
-                    @PathVariable("page") Integer page,
+        @PathVariable("page") Integer page,
         @RequestParam(required = false, defaultValue = "6") Integer limit) {
         MyPost post = postService.getPostById(id);
         model.addAttribute("post", post);

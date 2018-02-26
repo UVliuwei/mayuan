@@ -80,7 +80,7 @@
             </tr>
             </tbody>
           </table>
-          <p th:text="${post.content }"></p>
+          <div name="detail" th:text="${post.content }"></div>
         </div>
       </div>
 
@@ -122,7 +122,8 @@
               </span>
                 <div class="jieda-admin">
                   <span th:if="${session.user==null?fasle:session.user.id==answer.userId}" type="del">删除</span>
-                  <span th:if="${session.user==null?fasle:session.user.id==answer.userId && post.ended == '0'}" class="jieda-accept" type="accept">采纳</span>
+                  <span th:if="${session.user==null?fasle:session.user.id==answer.userId && post.ended == '0'}" class="jieda-accept"
+                        type="accept">采纳</span>
                 </div>
               </div>
             </li>
@@ -156,53 +157,14 @@
     <div class="layui-col-md4">
       <dl class="fly-panel fly-list-one">
         <dt class="fly-panel-title">本周热议</dt>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
+        <dd th:each="top:${topList}">
+          <a th:href="'/jie/detail/' + ${top.id}" th:text="${top.title}"></a>
+          <span><i class="iconfont icon-pinglun1"></i> <span th:text="${top.ansnum}"></span></span>
         </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-        <dd>
-          <a href="">基于 layui 的极简社区页面模版</a>
-          <span><i class="iconfont icon-pinglun1"></i> 16</span>
-        </dd>
-
         <!-- 无数据时 -->
-
-        <div class="fly-none">没有相关数据</div>
+        <div th:if="${topList == null}" class="fly-none">没有相关数据</div>
 
       </dl>
-
       <div class="fly-panel">
         <div class="fly-panel-title">
           这里可作为广告区域
@@ -241,7 +203,7 @@
         layui.use(['laypage'], function () {
             var laypage = layui.laypage;
             var $ = layui.jquery;
-            $("[name='detail']").each(function(){
+            $("[name='detail']").each(function () {
                 var othis = $(this), html = othis.html();
                 othis.html(fly.content(html));
             });
@@ -250,14 +212,14 @@
             var totalCount = $("#totalCount").val();  //查询总条数
             var pageSize = 6;  //每页条数
             //分页
-            if(totalCount > 0) {
+            if (totalCount > 0) {
                 $("#reply").addClass("layui-hide");
                 laypage.render({
                     elem: 'page'
-                    ,count: totalCount
-                    ,groups:3
-                    ,limit:6
-                    ,curr: currentPage
+                    , count: totalCount
+                    , groups: 3
+                    , limit: 6
+                    , curr: currentPage
                     , jump: function (obj, first) {
                         if (!first) {
                             var postId = $("#postId").val();

@@ -103,10 +103,10 @@ public class UserService {
             }
             city = city == "" || city == null ? "隐藏" : city;
             userDao.updateUserInfo(id, name, sex, city, description, new Date());
-            return MyResult.ok("信息更新成功");
+            return MyResult.ok("信息修改成功");
         } catch (Exception ex) {
             ex.printStackTrace();
-            log.info("用户信息更新异常");
+            log.info("用户信息修改异常");
         }
         return MyResult.error("系统异常，请重试");
     }

@@ -11,6 +11,7 @@ import java.util.List;
 import org.aspectj.weaver.ast.Var;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -43,7 +44,7 @@ public interface PostDao extends BaseDao<MyPost> {
     @Modifying
     @Transactional
     @Query("update MyPost post set post.acceptId = ?2, post.updateDate = ?3 , post.ended = '1' where post.id = ?1")
-    void updateAccepted(Long postId,Long ansId, Date date);
+    void updateAccepted(Long postId, Long ansId, Date date);
 
     @Modifying
     @Transactional
@@ -59,4 +60,6 @@ public interface PostDao extends BaseDao<MyPost> {
     @Transactional
     @Query("update MyPost post set post.popularity = post.popularity + 1 where post.id = ?1")
     void addPostPopularity(Long id);
+
+    Page<MyPost> findByCreateDateAfter(Date date, Pageable pageable);
 }
