@@ -98,10 +98,8 @@
                   <img th:src="@{/images/{img}(img=${answer.userImg})}">
                 </a>
                 <div class="fly-detail-user">
-                  <a href="" class="fly-link">
+                  <a th:href="'/user/'+${answer.userId}+'/info'" class="fly-link">
                     <cite><span th:text="${answer.userName}"></span></cite>
-                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                    <i class="layui-badge fly-badge-vip">VIP3</i>
                   </a>
                 </div>
 

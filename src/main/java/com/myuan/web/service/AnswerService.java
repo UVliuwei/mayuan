@@ -81,6 +81,7 @@ public class AnswerService {
                 reply.setReplyName(strings[0].substring(1));
                 reply.preInsert();
                 replyDao.save(reply);
+                postService.addPostAnsNum(postId);
             }
             return MyResult.data(html);
         } catch (Exception e) {
@@ -139,4 +140,14 @@ public class AnswerService {
         }
         return myPage;
     }
+    /**
+     * <liuwei> [2018/2/26 8:36] 用户回答
+     */
+    public List<MyAnswer> findUserAnswers(Long userId) {
+        return answerDao.findMyAnswersByUserId(userId);
+    }
+    public MyAnswer findAnswerById(Long id) {
+        return answerDao.findOne(id);
+    }
+
 }

@@ -110,4 +110,11 @@ public class UserService {
         }
         return MyResult.error("系统异常，请重试");
     }
+
+    /**
+     * <liuwei> [2018/2/26 10:06] 增加飞吻
+     */
+    public void addUserKiss(Long id, Integer kiss) {
+        userDao.addUserKiss(id, kiss);
+    }
 }

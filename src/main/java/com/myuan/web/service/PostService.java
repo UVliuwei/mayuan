@@ -2,12 +2,14 @@ package com.myuan.web.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myuan.web.dao.PostDao;
+import com.myuan.web.entity.MyAnswer;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,10 @@ public class PostService {
 
     @Autowired
     private PostDao postDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AnswerService answerService;
 
     public MyResult savePost(MyPost post) {
         try {
@@ -108,11 +114,33 @@ public class PostService {
     /**
      * <liuwei> [2018/2/25 15:06] 采纳最佳答案
      */
+    @Transactional
     public MyResult updateAccepted(Long postId, Long ansId) {
         postDao.updateAccepted(postId, ansId, new Date());
+        MyAnswer answer = answerService.findAnswerById(ansId);
+        MyPost post = postDao.findMyPostById(postId);
+        userService.addUserKiss(answer.getUserId(), post.getKiss());
         return MyResult.ok("");
     }
+
+    /**
+     * <liuwei> [2018/2/26 9:58] 移除采纳
+     */
     public void removeAccept(Long ansId) {
         postDao.removePostAccept(ansId);
+    }
+
+    /**
+     * <liuwei> [2018/2/26 9:55] 增加人气
+     */
+    public void addPostPopularity(Long id) {
+        postDao.addPostPopularity(id);
+    }
+
+    /**
+     * <liuwei> [2018/2/26 9:55] 增加回答
+     */
+    public void addPostAnsNum(Long id) {
+        postDao.addPostAnsnum(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.myuan.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.service.AnswerService;
 import com.myuan.web.service.PostService;
@@ -33,6 +34,15 @@ public class IndexController {
         return ("user/" + path);
     }
 
+    @GetMapping("user/{id}/info")
+    public String userInfo(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user",userService.getUserById(id));
+        JSONObject posts = postService.findUserPosts(id, 1, 30);
+        model.addAttribute("posts", posts.get("data"));
+        model.addAttribute("answers", answerService.findUserAnswers(id));
+        return "user/home";
+    }
+
     @GetMapping("jie/{path}")
     public String jie(@PathVariable("path") String path) {
         return ("jie/" + path);
@@ -52,6 +62,7 @@ public class IndexController {
         model.addAttribute("post", post);
         model.addAttribute("page", answerService.findAnswers(id, page, limit));
         model.addAttribute("user", userService.getUserById(post.getUserId()));
+        postService.addPostPopularity(id);
         return "jie/detail";
     }
     @GetMapping("jie/detail/{id}/{page}")
