@@ -3,7 +3,7 @@
       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
   <meta charset="utf-8">
-  <title>用户主页</title>
+  <title th:text="|${user.name}的主页|"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
   <meta name="keywords" content="myuan,前端社区"/>
   <meta name="description" content="码猿社区"/>
@@ -32,7 +32,7 @@
 
   <p class="fly-home-info">
     <i class="iconfont icon-kiss" title="飞吻"></i><span style="color: #FF7200;" th:text="|${user.kiss} 飞吻|"></span>
-    <i class="iconfont icon-shijian"></i><span th:text="${user.time}"></span>
+    <i class="iconfont icon-shijian"></i><span th:text="|${user.time} 加入|"></span>
     <i class="iconfont icon-chengshi"></i><span th:text="${user.city}"></span>
   </p>
 
