@@ -70,7 +70,8 @@
                 {field: 'title', title: '帖子标题', width : 320, templet: '<div><a href="/jie/detail/{{d.id}}" class="layui-table-link">{{d.title}}</a></div>'}
                 , {field: 'ended', title: '结贴', templet: '#end'}
                 , {field: '', title: '数据' ,templet:'<div>{{d.popularity}}阅/{{d.ansnum}}答</div>' }
-                , {field: '', title: '操作', templet:'<div><a class="layui-btn layui-btn-xs"  href="/jie/edit/{{d.id}}" target="_blank">编辑</a></div>'}
+                , {field: 'time', title: '发表时间'}
+                , {field: '', title: '操作', templet:'#edit'}
             ]]
         });
         table.render({
@@ -78,8 +79,8 @@
             , url: '/api/collections/user/' + id //数据接口
             , page: true //开启分页
             , cols: [[ //表头
-                {field: 'title', title: '帖子标题', width : 750, templet: '<div><a href="/jie/detail/{{d.id}}" class="layui-table-link">{{d.title}}</a></div>'}
-                , {field: 'time', title: '收藏时间', }
+                {field: 'title', title: '帖子标题', width : 750, templet: '<div></div>'}
+                , {field: 'time', title: '时间', }
             ]]
         });
     });
@@ -91,6 +92,12 @@
     <span style="color: #cccccc;">未结</span>
   {{#  } }}
 </script>
-
+<script id="edit", type="text/html">
+  {{#  if(d.ended == '1'){ }}
+    <div></div>
+  {{#  } else { }}
+  <a class="layui-btn layui-btn-xs"  href="/jie/edit/{{d.id}}" target="_blank">编辑</a>
+  {{#  } }}
+</script>
 </body>
 </html>
