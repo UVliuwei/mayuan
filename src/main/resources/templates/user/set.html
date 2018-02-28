@@ -48,6 +48,7 @@
             <div class="layui-form-item">
               <label for="email" class="layui-form-label">邮箱</label>
               <div class="layui-input-inline">
+                <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
                 <input type="text" id="email" name="email" disabled="disabled" required="required" lay-verify="email"
                        autocomplete="off" ng-model="user.email" class="layui-input"/>
               </div>
@@ -60,8 +61,7 @@
               </div>
               <div class="layui-inline">
                 <div class="layui-input-inline">
-                  <input type="radio" name="sex" ng-model="user.sex" value="男" checked="checked"
-                         title="男"/>
+                  <input type="radio" name="sex" ng-model="user.sex" value="男" checked="checked" title="男"/>
                   <input type="radio" name="sex" ng-model="user.sex" value="女" title="女"/>
                 </div>
               </div>
@@ -158,7 +158,19 @@
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
-    var id = getUserId();
+    var userId = $("#userId").val();
+    layui.cache.user = {
+        uid: userId
+    };
+    layui.config({
+        version: "2.0.0"
+        , base: '/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('user');
+</script>
+<script>
+    var id = layui.cache.user.uid;
     var app = angular.module("app",[]);
     app.controller("infoController", function ($scope) {
         $("#infoForm").attr("action", "/api/user/" + id);
@@ -179,18 +191,6 @@
             }
         });
     });
-</script>
-<script>
-    var userId = getUserId();
-    layui.cache.user = {
-        uid: userId
-    };
-  layui.config({
-    version: "2.0.0"
-    , base: '/res/mods/'
-  }).extend({
-    fly: 'index'
-  }).use('user');
 </script>
 </body>
 </html>

@@ -38,6 +38,7 @@
 	  <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
 	    <button class="layui-btn layui-btn-danger layui-hide" id="LAY_delallmsg">清空全部消息</button>
 	    <div  id="LAY_minemsg" style="margin-top: 10px;">
+        <input type="hidden" id="userId" th:value="${session.user == null ? -1: session.user.id}">
         <!--<div class="fly-none">您暂时没有最新消息</div>-->
         <ul class="mine-msg">
         </ul>
@@ -50,7 +51,7 @@
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
 layui.cache.page = 'user';
-var userId = getUserId();
+var userId = $("#userId").val();
 layui.cache.user = {
   uid: userId
 };

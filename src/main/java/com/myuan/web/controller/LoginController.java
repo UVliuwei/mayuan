@@ -15,6 +15,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,7 @@ public class LoginController extends BaseController {
      */
     @PostMapping("login")
     @ApiOperation(value = "用户登录", notes = "用户登录")
-    public MyResult login(String email, String password, HttpServletResponse response) {
+    public MyResult login(String email, String password) {
         Subject subject = SecurityUtils.getSubject();
         MyUser user = userService.getUserByEmail(email);
         if (user == null) {
@@ -53,7 +54,7 @@ public class LoginController extends BaseController {
         } catch (Exception e) {
             return MyResult.error("用户名或密码错误");
         }
-        setUserSession(user, response);
+        setUserSession(user);
         log.info(email + " : 登陆成功");
         return MyResult.action("/user/index", "登录成功");
     }
@@ -73,5 +74,12 @@ public class LoginController extends BaseController {
         user.setPassword(SaltPasswordUtil.getNewPassword(user.getPassword()));
         MyResult result = userService.saveUser(user);
         return result;
+    }
+    @PostMapping("logout")
+    @ApiOperation(value = "退出登录", notes = "退出登录")
+    public MyResult logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return MyResult.ok("");
     }
 }

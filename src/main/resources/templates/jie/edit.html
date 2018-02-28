@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <title>编辑问题 </title>
@@ -24,6 +23,7 @@
         </ul>
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
           <div class="layui-tab-item layui-show">
+            <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
             <form id="form" method="put" action="/api/post">
               <div class="layui-row layui-col-space15 layui-form-item">
                 <div class="layui-col-md3">
@@ -43,7 +43,7 @@
                 <div class="layui-col-md9">
                   <label for="L_title" class="layui-form-label">标题</label>
                   <div class="layui-input-block">
-                    <input type="text" id="L_title" name="title" th:value="${post.title}" required="required" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="text" id="L_title" name="title" readonly title="标题不可修改" th:value="${post.title}" required="required" lay-verify="required" autocomplete="off" class="layui-input">
                     <!-- <input type="hidden" name="id" value="{{d.edit.id}}"> -->
                   </div>
                 </div>
@@ -101,8 +101,9 @@
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
+  var userId = $("#userId").val();
     layui.cache.user = {
-        uid: -1
+        uid: userId
     };
     layui.config({
         version: "3.0.0"

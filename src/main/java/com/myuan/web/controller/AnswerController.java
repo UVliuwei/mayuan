@@ -5,7 +5,10 @@ import com.myuan.web.entity.MyAnswer;
 import com.myuan.web.entity.MyPage;
 import com.myuan.web.entity.MyReply;
 import com.myuan.web.entity.MyResult;
+import com.myuan.web.entity.MyUser;
+import com.myuan.web.entity.vo.UserAnswer;
 import com.myuan.web.service.AnswerService;
+import com.myuan.web.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -74,8 +77,13 @@ public class AnswerController {
 
     @ApiOperation(value = "删除回答", notes = "删除回答")
     @DeleteMapping("answer/{id}/{flag}")
-    public MyResult deleteAnswer(@PathVariable("id") Long id,@PathVariable("flag") String flag) {
+    public MyResult deleteAnswer(@PathVariable("id") Long id, @PathVariable("flag") String flag) {
         return answerService.deleteAnswer(id, flag);
     }
 
+    @ApiOperation(value = "回帖周榜", notes = "回帖周榜")
+    @GetMapping("answer/top/users")
+    public List<UserAnswer> getTopUsers() {
+        return answerService.findTopAnswerUsers();
+    }
 }

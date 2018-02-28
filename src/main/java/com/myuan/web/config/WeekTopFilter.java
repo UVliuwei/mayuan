@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @WebFilter(urlPatterns = {"/jie/**", "/", "/index", "/column/**"})
-public class TopFilter implements Filter {
+public class WeekTopFilter implements Filter {
 
     @Autowired
     private PostService postService;
@@ -34,7 +34,7 @@ public class TopFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest re = (HttpServletRequest) request;
-        request.setAttribute("topList", postService.getTopPost());
+        request.setAttribute("weekTopList", postService.getWeekTopPost());
         chain.doFilter(request, response);
     }
 

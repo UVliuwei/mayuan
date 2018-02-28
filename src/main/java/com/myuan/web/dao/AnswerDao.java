@@ -1,10 +1,12 @@
 package com.myuan.web.dao;
 
 import com.myuan.web.entity.MyAnswer;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,5 +25,10 @@ public interface AnswerDao extends BaseDao<MyAnswer>{
     void deleteById(Long id);
 
     List<MyAnswer> findMyAnswersByUserId(Long userId);
+
+    @Query("select answer.userId from MyAnswer answer where answer.createDate > ?1 group by answer.userId order by count(answer) DESC")
+    Page<Long> findTopAnswerUsers(Date date, Pageable pageable);
+
+    Integer countByUserIdAndCreateDateAfter(Long userId, Date date);
 
 }

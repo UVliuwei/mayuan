@@ -4,12 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.myuan.web.dao.PostDao;
 import com.myuan.web.entity.MyAnswer;
+import com.myuan.web.entity.MyPage;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
+import com.myuan.web.entity.vo.UserPost;
 import com.myuan.web.utils.DateUtil;
+import com.myuan.web.utils.SwitchUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,11 +157,82 @@ public class PostService {
     /**
      * <liuwei> [2018/2/26 10:45] 本周热议
      */
-    public List<MyPost> getTopPost() {
+    public List<MyPost> getWeekTopPost() {
         Sort sort = new Sort(Direction.DESC, "ansnum");
         Pageable pageable = new PageRequest(0, 15, sort);
         Date date = DateUtil.getThisWeek();
         Page<MyPost> posts = postDao.findByCreateDateAfter(date, pageable);
         return posts.getContent();
+    }
+
+    /**
+     * <liuwei> [2018/2/27 10:19] 置顶帖
+     */
+    @Transactional
+    public List<UserPost> getTopPost() {
+        Sort sort = new Sort(Direction.DESC, "createDate");
+        Pageable pageable = new PageRequest(0, 5, sort);
+        Page<MyPost> posts = postDao.findMyPostsByTopped("1", pageable);
+        return getUserPost(posts);
+    }
+
+    /**
+     * <liuwei> [2018/2/27 15:38] 所有帖子 value : all - 综合， unsolved - 已结， ununsolved - 未结， wonderful -精华 动态查询语句
+     */
+    @Transactional
+    public MyPage<UserPost> getAllPost(Integer page, Integer limit, final String column, final String value) {
+        Sort sort = new Sort(Direction.DESC, "createDate");
+        Pageable pageable = new PageRequest(page - 1, limit, sort);
+        Specification<MyPost> specification = new Specification<MyPost>() {
+            @Override
+            public Predicate toPredicate(Root<MyPost> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = Lists.newArrayList();
+                if ("all".equals(column)) {
+                    predicates.add(root.<String>get("pcolumn").in("提问", "分享", "讨论", "建议", "公告"));
+                } else {
+                    predicates.add(cb.equal(root.<String>get("pcolumn"), SwitchUtil.switchColumn(column)));
+                }
+                if ("solved".equals(value)) {
+                    predicates.add(cb.equal(root.<String>get("ended"), "1"));
+                }
+                if ("unsolved".equals(value)) {
+                    predicates.add(cb.equal(root.<String>get("ended"), "0"));
+                }
+                if ("wonderful".equals(value)) {
+                    predicates.add(cb.equal(root.<String>get("boutiqued"), "1"));
+                }
+                return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+            }
+        };
+        Page<MyPost> posts = postDao.findAll(specification, pageable);
+        List<UserPost> userPosts = getUserPost(posts);
+        MyPage<UserPost> myPage = new MyPage<>();
+        if(userPosts == null) {
+            myPage.setCount(0L);
+            myPage.setCurrentPage(page);
+            myPage.setPageNum(0);
+            myPage.setList(new ArrayList<UserPost>());
+        } else {
+            myPage.setCount(posts.getTotalElements());
+            myPage.setCurrentPage(page);
+            myPage.setPageNum(posts.getTotalPages());
+            myPage.setList(userPosts);
+        }
+        return myPage;
+    }
+
+    /**
+     * <liuwei> [2018/2/27 15:50]
+     */
+    private List<UserPost> getUserPost(Page<MyPost> posts) {
+        List<UserPost> userPostList = Lists.newArrayList();
+        UserPost userPost = null;
+        for (MyPost post : posts.getContent()) {
+            userPost = new UserPost();
+            userPost.setPost(post);
+            userPost.setUser(userService.getUserById(post.getUserId()));
+            userPostList.add(userPost);
+        }
+        return userPostList.size() == 0 ? null : userPostList;
     }
 }

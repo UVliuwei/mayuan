@@ -22,7 +22,7 @@
     <span style="font-size: 25px;color: black" th:text="${user.name}"></span>
     <i th:if="${user.sex == '男'}" class="iconfont icon-nan"></i>
     <i th:if="${user.sex == '女'}" class="iconfont icon-nv"></i>
-
+    <input type="hidden" id="userId" th:value="${session.user == null ? -1: session.user.id}">
     <shiro:hasRole name="superadmin"><span style="color:#c00;">（超级管理员）</span></shiro:hasRole>
     <shiro:hasRole name="admin"><span style="color:#c00;">（管理员）</span></shiro:hasRole>
     <span th:if="${user.locked == '1'}">（该号已被封）</span>
@@ -82,7 +82,7 @@
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
-  var userId = getUserId();
+  var userId = $("#userId").val();
 layui.cache.page = 'user';
 layui.cache.user = {
   uid: userId

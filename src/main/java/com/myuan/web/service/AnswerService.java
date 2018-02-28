@@ -2,6 +2,7 @@ package com.myuan.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.myuan.web.dao.AnswerDao;
 import com.myuan.web.dao.ReplyDao;
 import com.myuan.web.entity.MyAnswer;
@@ -10,7 +11,10 @@ import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyReply;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
+import com.myuan.web.entity.vo.UserAnswer;
+import com.myuan.web.utils.DateUtil;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j;
@@ -73,7 +77,7 @@ public class AnswerService {
                 reply.setPostName(postService.getPostById(postId).getTitle());
                 reply.setUserId(userId);
                 reply.setUserName(user.getName());
-                if(replyUser == null) {
+                if (replyUser == null) {
                     reply.setReplyId(-1L);
                 } else {
                     reply.setReplyId(user.getId());
@@ -93,24 +97,28 @@ public class AnswerService {
     public Integer getMessageNums(Long userId) {
         return replyDao.countByReplyId(userId);
     }
+
     public MyResult findUserMessage(Long id) {
         List<MyReply> replies = replyDao.findMyRepliesByReplyId(id);
         return MyResult.data(JSON.toJSONString(replies));
     }
+
     public MyResult deleteMessage(Long id) {
         MyUser user = userService.getUserById(id);
         replyDao.deleteById(id);
         return MyResult.ok("");
     }
+
     public MyResult deleteMessages(Long userId) {
         replyDao.deleteAllByReplyId(userId);
         return MyResult.ok("");
     }
+
     @Transactional
     public MyResult deleteAnswer(Long id, String flag) {
         try {
             answerDao.deleteById(id);
-            if("true".equals(flag)) {
+            if ("true".equals(flag)) {
                 postService.removeAccept(id);
             }
             return MyResult.ok("");
@@ -119,6 +127,7 @@ public class AnswerService {
         }
         return MyResult.error("系统异常，请重试");
     }
+
     /**
      * <liuwei> [2018/2/24 14:08] 回复分页
      */
@@ -140,14 +149,36 @@ public class AnswerService {
         }
         return myPage;
     }
+
     /**
      * <liuwei> [2018/2/26 8:36] 用户回答
      */
     public List<MyAnswer> findUserAnswers(Long userId) {
         return answerDao.findMyAnswersByUserId(userId);
     }
+
     public MyAnswer findAnswerById(Long id) {
         return answerDao.findOne(id);
+    }
+
+    /**
+     * <liuwei> [2018/2/27 14:13] 回帖周榜
+     */
+    @Transactional
+    public List<UserAnswer> findTopAnswerUsers() {
+        Sort sort = new Sort(Direction.DESC, "createDate");
+        Pageable pageable = new PageRequest(0, 12);
+        Date date = DateUtil.getThisWeek();
+        Page<Long> userAnswers = answerDao.findTopAnswerUsers(date, pageable);
+        List<UserAnswer> userList = Lists.newArrayList();
+        UserAnswer userAnswer = null;
+        for (Long id : userAnswers.getContent()) {
+            userAnswer = new UserAnswer();
+            userAnswer.setUser(userService.getUserById(id));
+            userAnswer.setCount(answerDao.countByUserIdAndCreateDateAfter(id, date));
+            userList.add(userAnswer);
+        }
+        return userList;
     }
 
 }

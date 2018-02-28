@@ -29,14 +29,14 @@
                 <div class="layui-col-md3">
                   <label class="layui-form-label">所在专栏</label>
                   <div class="layui-input-block">
-                    <input id="userId" name="userId" type="hidden">
+                    <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
                     <select lay-verify="required" name="pcolumn" lay-filter="column">
                       <option></option>
-                      <option value="0">提问</option>
-                      <option value="99">分享</option>
-                      <option value="100">讨论</option>
-                      <option value="101">建议</option>
-                      <option value="168">公告</option>
+                      <option value="提问">提问</option>
+                      <option value="分享">分享</option>
+                      <option value="讨论">讨论</option>
+                      <option value="建议">建议</option>
+                      <shiro:hasRole name="superadmin"><option value="公告">公告</option></shiro:hasRole>
                     </select>
                   </div>
                 </div>
@@ -105,9 +105,9 @@
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
 <script>
-  $("#userId").val(getUserId());
+  var userId = $("#userId").val();
 layui.cache.user = {
-    uid: -1
+    uid: userId
 };
 layui.config({
   version: "3.0.0"

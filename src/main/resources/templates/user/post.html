@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,6 +16,7 @@
 <div th:replace="/common/header::header"></div>
 <div class="layui-container fly-marginTop fly-user-main">
   <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+    <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
     <li class="layui-nav-item"><a th:href="'/user/'+${session.user.id } + '/info'"><i class="layui-icon">&#xe609;</i>我的主页</a></li>
     <li class="layui-nav-item"><a href="/user/index"><i class="layui-icon">&#xe612;</i>用户中心</a></li>
     <li class="layui-nav-item"><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></li>
@@ -44,9 +44,22 @@
 </div>
 <div th:replace="/common/footer::footer"></div>
 <script th:src="@{/res/mods/form.js}"></script>
+<script th:src="@{/res/mods/jquery.js}"></script>
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
-    var id = getUserId();
+    var userId = $("#userId").val();
+    layui.cache.user = {
+        uid: userId
+    };
+    layui.config({
+        version: "3.0.0"
+        , base: '/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('user');
+</script>
+<script>
+    var id = layui.cache.user.uid;
     layui.use('table', function () {
         var table = layui.table;
         table.render({
@@ -77,18 +90,6 @@
   {{#  } else { }}
     <span style="color: #cccccc;">未结</span>
   {{#  } }}
-</script>
-<script>
-    var userId = getUserId();
-    layui.cache.user = {
-        uid: userId
-    };
-    layui.config({
-        version: "3.0.0"
-        , base: '/res/mods/'
-    }).extend({
-        fly: 'index'
-    }).use('user');
 </script>
 
 </body>

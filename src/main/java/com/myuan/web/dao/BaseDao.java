@@ -7,9 +7,10 @@ package com.myuan.web.dao;
 
 import com.myuan.web.entity.MyUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean //base接口不需要创建bean
-public interface BaseDao<T> extends JpaRepository<T,Long>{
+public interface BaseDao<T> extends JpaRepository<T,Long>, JpaSpecificationExecutor<T> {
 
 }

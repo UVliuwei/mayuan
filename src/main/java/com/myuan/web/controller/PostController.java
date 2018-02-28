@@ -3,11 +3,13 @@ package com.myuan.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
+import com.myuan.web.entity.vo.UserPost;
 import com.myuan.web.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -85,9 +87,16 @@ public class PostController extends BaseController {
     public MyResult updateAccepted(@PathVariable("id") Long postId,@PathVariable("ansId") Long ansId) {
         return postService.updateAccepted(postId, ansId);
     }
-    @GetMapping("/post/top")
+    @GetMapping("/post/weektop")
     @ApiOperation(value = "本周热议", notes = "本周热议")
-    public List<MyPost> getPostTop() {
+    public List<MyPost> getPostWeekTop() {
+        return postService.getWeekTopPost();
+    }
+
+    @GetMapping("/post/top")
+    @ApiOperation(value = "置顶帖", notes = "置顶帖")
+    public List<UserPost> getPostTop() {
         return postService.getTopPost();
     }
+
 }

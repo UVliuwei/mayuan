@@ -293,7 +293,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
             });
             layer.tips('你有 '+ res.data +' 条未读消息', msg, {
               tips: 3
-              ,tipsMore: true
+              ,tipsMore: false
               ,fixed: true
             });
             msg.on('mouseenter', function(){
@@ -539,7 +539,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
     }
     text = text.replace(/^@|（[\s\S]+?）/g, '');
     othis.attr({
-      href: '/jump?username='+ text
+      href: '/user/info?username='+ text
       ,target: '_blank'
     });
   });

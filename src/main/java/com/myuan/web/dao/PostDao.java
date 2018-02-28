@@ -62,4 +62,7 @@ public interface PostDao extends BaseDao<MyPost> {
     void addPostPopularity(Long id);
 
     Page<MyPost> findByCreateDateAfter(Date date, Pageable pageable);
+
+    Page<MyPost> findMyPostsByTopped(String topped, Pageable pageable);
+
 }

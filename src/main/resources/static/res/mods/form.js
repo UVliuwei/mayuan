@@ -39,20 +39,13 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function 
         });
         return false;
     });
+    $("#logout").click(function () {
+        $.post("/user/logout", function (res) {
+            if(res.status == '1') {
+                window.location.reload();
+            }
+        });
+    });
 });
 
-function getUserId() {
-    var id = -1;
-    if(document.cookie.length>0) {
-        var cookies = document.cookie.split(";");
-        for(var i=0; i<cookies.length; i++) {
-            var cookie = cookies[i];
-            var sp = cookie.split("=");
-            if(sp[0] == "myuan_id") {
-                id = sp[1];
-                break;
-            }
-        }
-    }
-    return id;
-}
+

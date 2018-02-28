@@ -1,7 +1,5 @@
 
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
 <head>
   <meta charset="utf-8">
   <title>权限公告页</title>
@@ -24,14 +22,58 @@
 </head>
 
 <body>
+<div th:replace="/common/header::header"></div>
 
+<div class="fly-panel fly-column">
+  <div class="layui-container">
+    <ul class="layui-clear">
+      <li id="call"><a href="/">首页</a></li>
+      <li id="cquiz"><a href="/column/quiz/all">提问</a></li>
+      <li id="cshare"><a href="/column/share/all">分享<span class="layui-badge-dot"></span></a></li>
+      <li id="cdiscuss"><a href="/column/discuss/all">讨论</a></li>
+      <li id="csuggest"><a href="/column/suggest/all">建议</a></li>
+      <li id="cnotice"><a href="/column/notice/all">公告</a></li>
+      <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+
+      <!-- 用户登入后显示 -->
+      <shiro:user>
+        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post">我发表的贴</a></li>
+        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/post#collection">我收藏的贴</a></li>
+      </shiro:user>
+    </ul>
+
+    <div class="fly-column-right layui-hide-xs">
+      <span class="fly-search"><i class="layui-icon"></i></span>
+      <a href="/jie/add" class="layui-btn">发表新帖</a>
+    </div>
+    <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
+      <a href="/jie/add" class="layui-btn">发表新帖</a>
+    </div>
+  </div>
+</div>
 <div class="fly-none" style="min-height: 0; padding: 0;">
   <i class="iconfont icon-tishilian"></i>
 </div>
 
 <div class="notice layui-text">
-	非常抱歉，您没有此权限 <br> <a href="/" target="_blank">首页</a> <span style="padding:0 5px;"></span> <a href="" target="_blank">示例</a> <span style="padding:0 5px;"></span>
+  <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
+  非常抱歉，您没有此权限 <br> <a href="/" target="_blank">首页</a> <span style="padding:0 5px;"></span> <a href="" target="_blank">示例</a> <span style="padding:0 5px;"></span>
 </div>
-
+<div th:replace="/common/footer::footer"></div>
+<script th:src="@{/res/layui/layui.js}"></script>
+<script th:src="@{/res/layui/jquery.js}"></script>
+<script>
+    layui.cache.page = '';
+    var userId = $("#userId").val();
+    layui.cache.user = {
+        uid: userId
+    };
+    layui.config({
+        version: "3.0.0"
+        ,base: '/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('fly');
+</script>
 </body>
 </html>
