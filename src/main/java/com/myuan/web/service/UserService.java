@@ -5,7 +5,9 @@ import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyRole;
 import com.myuan.web.entity.MyUser;
 import com.myuan.web.entity.MyZan;
+import com.myuan.web.utils.IDUtil;
 import com.myuan.web.utils.SaltPasswordUtil;
+import com.myuan.web.utils.SendMail;
 import java.util.Date;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class UserService {
     private RoleService roleService;
     @Autowired
     private ZanService zanService;
+    @Autowired
+    private MailService mailService;
 
     /**
      * 用户名查用户
@@ -128,5 +132,16 @@ public class UserService {
     @CacheEvict(value = "users", key = "'user_'+#id")
     public void addUserKiss(Long id, Integer kiss) {
         userDao.addUserKiss(id, kiss);
+    }
+
+    /**
+     * <liuwei> [2018/3/1 16:07] 重置密码
+     */
+    public MyResult resetPass(String email) {
+        MyUser user = getUserByEmail(email);
+        if (user == null) {
+            return MyResult.error("邮箱不存在");
+        }
+        return mailService.sendSimpleMail(email, user.getName(), IDUtil.code());
     }
 }
