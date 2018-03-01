@@ -8,6 +8,8 @@ import com.myuan.web.entity.MyUserRole;
 import java.util.List;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class RoleService {
      * 获取用户角色 <liuwei> [2018/1/28 9:04]
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "user_roles", key = "'user_role_'+#userId")
     public List<MyRole> findRoleByUserId(Long userId) {
         log.info("获取id为 " + userId + " 的角色信息");
         List<Long> idList = userRoleDao.findRoleIdByUserId(userId);
@@ -39,6 +42,7 @@ public class RoleService {
      * 用户分配角色 <liuwei> [2018/1/28 10:24]
      */
     @Transactional
+    @CacheEvict(value = "user_roles", key = "'user_role_'+#userId")
     public void saveUserRole(Long userId, Long roleId) {
         MyUserRole userRole = new MyUserRole();
         userRole.setUserId(userId);
@@ -46,6 +50,7 @@ public class RoleService {
         userRoleDao.save(userRole);
     }
     @Transactional(readOnly = true)
+    @Cacheable(value = "roles", key = "'role_'+#id")
     public MyRole findRoleById(Long id) {
         return roleDao.findOne(id);
     }

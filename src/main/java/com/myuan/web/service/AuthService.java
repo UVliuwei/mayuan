@@ -5,6 +5,7 @@ import com.myuan.web.dao.RoleAuthDao;
 import com.myuan.web.entity.MyAuthority;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class AuthService {
      * 获取劫色权限 <liuwei> [2018/1/28 9:51]
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "auths", key = "'auth_' + #roleId")
     public List<MyAuthority> findAuthByRoleId(Long roleId) {
         List<Long> idList = roleAuthDao.findAuthIdByRoleId(roleId);
         return authDao.findMyAuthoritiesByIdIn(idList);

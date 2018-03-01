@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +54,7 @@ public class AnswerService {
      * <liuwei> [2018/2/24 9:34] 发表回复
      */
     @Transactional
+    @CacheEvict(value = "answers", key = "'post_' + #postId")
     public MyResult addAnswer(Long userId, Long postId, String content) {
         try {
             MyUser user = userService.getUserById(userId);
@@ -114,8 +117,6 @@ public class AnswerService {
 
     /**
      * <liuwei> [2018/3/1 9:29]清空全部消息
-     * @param userId
-     * @return
      */
     public MyResult deleteMessages(Long userId) {
         replyDao.deleteAllByReplyId(userId);
@@ -123,6 +124,7 @@ public class AnswerService {
     }
 
     @Transactional
+    @CacheEvict(value = "answers", key = "'post_' + #id")
     public MyResult deleteAnswer(Long id, String flag) {
         try {
             answerDao.deleteById(id);
@@ -139,7 +141,8 @@ public class AnswerService {
     /**
      * <liuwei> [2018/2/24 14:08] 回复分页
      */
-    public MyPage<MyAnswer> findAnswers(Long postId, Integer page, Integer limit) {
+    @Cacheable(value = "answers", key = "'post_' + #postId")
+    public MyPage<MyAnswer> findAnswers(long postId, Integer page, Integer limit) {
         Sort sort = new Sort(Direction.ASC, "createDate");
         Pageable pageable = new PageRequest(page - 1, limit, sort);
         Page<MyAnswer> answers = answerDao.findMyAnswersByPostId(postId, pageable);
@@ -154,7 +157,7 @@ public class AnswerService {
             myPage.setCurrentPage(page);
             myPage.setPageNum(answers.getTotalPages());
             MyUser user = UserUtil.getCurrentUser();
-            if(user != null) {
+            if (user != null) {
                 for (MyAnswer answer : answers.getContent()) {
                     answer.setIsZan(zanService.checkZan(user.getId(), answer.getId()));
                 }
@@ -179,6 +182,7 @@ public class AnswerService {
      * <liuwei> [2018/2/27 14:13] 回帖周榜
      */
     @Transactional
+    @Cacheable(value = "topAnswerUser#86400#86400")
     public List<UserAnswer> findTopAnswerUsers() {
         Sort sort = new Sort(Direction.DESC, "createDate");
         Pageable pageable = new PageRequest(0, 12);
@@ -194,6 +198,7 @@ public class AnswerService {
         }
         return userList;
     }
+
     /**
      * <liuwei> [2018/3/1 8:51] 点赞量修改
      */

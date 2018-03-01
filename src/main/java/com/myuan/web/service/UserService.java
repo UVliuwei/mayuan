@@ -9,6 +9,8 @@ import com.myuan.web.utils.SaltPasswordUtil;
 import java.util.Date;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,7 @@ public class UserService {
     /**
      * 用户ID查用户
      */
+    @Cacheable(value = "users", key = "'user_'+#id")
     public MyUser getUserById(Long id) {
         return userDao.findMyUsersById(id);
     }
@@ -92,6 +95,7 @@ public class UserService {
      * 更新用户密码
      */
     @Transactional
+    @CacheEvict(value = "users", key = "'user_'+#id")
     public MyResult updateUserPass(Long id, String pass) {
         String newPass = SaltPasswordUtil.getNewPassword(pass);
         userDao.updateMyUserPass(id, newPass);
@@ -101,6 +105,7 @@ public class UserService {
     /**
      * 更新用户信息
      */
+    @CacheEvict(value = "users", key = "'user_'+#id")
     public MyResult updateUserInfo(Long id, String name, String sex, String city, String description) {
         try {
             MyUser user = getUserByName(name);
@@ -120,6 +125,7 @@ public class UserService {
     /**
      * <liuwei> [2018/2/26 10:06] 增加飞吻
      */
+    @CacheEvict(value = "users", key = "'user_'+#id")
     public void addUserKiss(Long id, Integer kiss) {
         userDao.addUserKiss(id, kiss);
     }

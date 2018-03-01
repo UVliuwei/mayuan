@@ -9,6 +9,8 @@ import com.myuan.web.entity.MyResult;
 import java.util.List;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public class CollectionService {
     public MyCollection findCollection(Long userId, Long postId) {
         return collectionDao.findByUserIdAndPostId(userId, postId);
     }
-
+    @CacheEvict(value = "collections", key = "'collection_' + #userId")
     public MyResult addCollection(Long userId, Long postId) {
         MyCollection collection = new MyCollection();
         collection.setUserId(userId);
@@ -42,7 +44,6 @@ public class CollectionService {
         collectionDao.save(collection);
         return MyResult.ok("");
     }
-
     public MyResult deleteCollection(Long userId, Long postId) {
         collectionDao.deleteByUserIdAndPostId(userId, postId);
         return MyResult.ok("");

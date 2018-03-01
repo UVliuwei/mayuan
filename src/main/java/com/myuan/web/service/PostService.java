@@ -20,6 +20,7 @@ import javax.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -157,6 +158,7 @@ public class PostService {
     /**
      * <liuwei> [2018/2/26 10:45] 本周热议
      */
+    @Cacheable(value = "topPost#86400#86400")
     public List<MyPost> getWeekTopPost() {
         Sort sort = new Sort(Direction.DESC, "ansnum");
         Pageable pageable = new PageRequest(0, 15, sort);
@@ -207,7 +209,7 @@ public class PostService {
         Page<MyPost> posts = postDao.findAll(specification, pageable);
         List<UserPost> userPosts = getUserPost(posts);
         MyPage<UserPost> myPage = new MyPage<>();
-        if(userPosts == null) {
+        if (userPosts == null) {
             myPage.setCount(0L);
             myPage.setCurrentPage(page);
             myPage.setPageNum(0);
