@@ -1,6 +1,8 @@
 package com.myuan.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.code.kaptcha.Constants;
+import com.google.common.base.Objects;
 import com.myuan.web.entity.MyPost;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.vo.UserPost;
@@ -8,6 +10,7 @@ import com.myuan.web.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +39,11 @@ public class PostController extends BaseController {
 
     @PostMapping("post")
     @ApiOperation(value = "发表求解", notes = "发表求解")
-    public MyResult addPost(@Valid MyPost post, BindingResult bindingResult) {
+    public MyResult addPost(@Valid MyPost post, BindingResult bindingResult, String vercode, HttpServletRequest request) {
+        String code = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if(!Objects.equal(code, vercode)) {
+            return MyResult.error("验证码错误");
+        }
         if (bindingResult.hasErrors()) {
             return validForm(bindingResult);
         }
@@ -46,7 +53,11 @@ public class PostController extends BaseController {
 
     @PutMapping("post")
     @ApiOperation(value = "编辑求解", notes = "编辑求解")
-    public MyResult editPost(@Valid MyPost post, BindingResult bindingResult) {
+    public MyResult editPost(@Valid MyPost post, BindingResult bindingResult, String vercode, HttpServletRequest request) {
+        String code = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if(!Objects.equal(code, vercode)) {
+            return MyResult.error("验证码错误");
+        }
         if (bindingResult.hasErrors()) {
             return validForm(bindingResult);
         }

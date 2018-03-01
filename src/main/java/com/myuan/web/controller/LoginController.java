@@ -1,11 +1,14 @@
 package com.myuan.web.controller;
 
+import com.google.code.kaptcha.Constants;
+import com.google.common.base.Objects;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
 import com.myuan.web.service.UserService;
 import com.myuan.web.utils.SaltPasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.log4j.Log4j;
@@ -39,7 +42,11 @@ public class LoginController extends BaseController {
      */
     @PostMapping("login")
     @ApiOperation(value = "用户登录", notes = "用户登录")
-    public MyResult login(String email, String password) {
+    public MyResult login(String email, String password, String vercode, HttpServletRequest request) {
+        String code = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if(!Objects.equal(code, vercode)) {
+            return MyResult.error("验证码错误");
+        }
         Subject subject = SecurityUtils.getSubject();
         MyUser user = userService.getUserByEmail(email);
         if (user == null) {
@@ -64,7 +71,11 @@ public class LoginController extends BaseController {
      */
     @PostMapping("reg")
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    public MyResult register(@Valid MyUser user, BindingResult bindingResult, String repassword) {
+    public MyResult register(@Valid MyUser user, BindingResult bindingResult, String repassword, String vercode, HttpServletRequest request) {
+        String code = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if(!Objects.equal(code, vercode)) {
+            return MyResult.error("验证码错误");
+        }
         if (bindingResult.hasErrors()) {
             return validForm(bindingResult);
         }

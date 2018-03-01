@@ -80,6 +80,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-mail</artifactId>
       </dependency>
+    <!--验证码-->
+    <dependency>
+      <groupId>com.github.axet</groupId>
+      <artifactId>kaptcha</artifactId>
+      <version>0.0.9</version>
+    </dependency>
     <!--mysql连接-->
     <dependency>
       <groupId>mysql</groupId>

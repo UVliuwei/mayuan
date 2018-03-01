@@ -1,12 +1,15 @@
 package com.myuan.web.controller;
 
+import com.google.code.kaptcha.Constants;
 import com.google.common.base.Objects;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
+import com.myuan.web.service.CodeService;
 import com.myuan.web.service.UserService;
 import com.myuan.web.utils.SaltPasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -30,6 +33,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CodeService codeService;
 
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/user/{id}")
@@ -64,8 +69,13 @@ public class UserController extends BaseController {
     }
     @ApiOperation(value = "重置密码", notes = "重置密码")
     @PostMapping("/user/passreset")
-    public MyResult resetPass(String email) {
+    public MyResult resetPass(String email, String vercode, HttpServletRequest request) {
+        String code = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if(!Objects.equal(code, vercode)) {
+            return MyResult.error("验证码错误");
+        }
         MyResult result = userService.resetPass(email);
         return result;
     }
+
 }
