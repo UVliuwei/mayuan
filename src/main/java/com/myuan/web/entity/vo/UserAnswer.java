@@ -13,4 +13,5 @@ public class UserAnswer {
 
     private MyUser user;
     private Integer count;
+    private boolean zan;
 }

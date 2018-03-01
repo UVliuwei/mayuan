@@ -13,6 +13,7 @@ import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
 import com.myuan.web.entity.vo.UserAnswer;
 import com.myuan.web.utils.DateUtil;
+import com.myuan.web.utils.UserUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,8 @@ public class AnswerService {
     private PostService postService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ZanService zanService;
 
     /**
      * <liuwei> [2018/2/24 9:34] 发表回复
@@ -109,6 +112,11 @@ public class AnswerService {
         return MyResult.ok("");
     }
 
+    /**
+     * <liuwei> [2018/3/1 9:29]清空全部消息
+     * @param userId
+     * @return
+     */
     public MyResult deleteMessages(Long userId) {
         replyDao.deleteAllByReplyId(userId);
         return MyResult.ok("");
@@ -145,6 +153,12 @@ public class AnswerService {
             myPage.setCount(answers.getTotalElements());
             myPage.setCurrentPage(page);
             myPage.setPageNum(answers.getTotalPages());
+            MyUser user = UserUtil.getCurrentUser();
+            if(user != null) {
+                for (MyAnswer answer : answers.getContent()) {
+                    answer.setIsZan(zanService.checkZan(user.getId(), answer.getId()));
+                }
+            }
             myPage.setList(answers.getContent());
         }
         return myPage;
@@ -179,6 +193,13 @@ public class AnswerService {
             userList.add(userAnswer);
         }
         return userList;
+    }
+    /**
+     * <liuwei> [2018/3/1 8:51] 点赞量修改
+     */
+    public void addAnswerZanNum(Long id, Integer num) {
+        MyAnswer answer = answerDao.findOne(id);
+        answer.setLikes(answer.getLikes() + num);
     }
 
 }

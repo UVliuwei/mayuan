@@ -5,6 +5,7 @@ package com.myuan.web.entity;
  *  回答类
  */
 
+import javax.persistence.Transient;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,4 +38,7 @@ public class MyAnswer extends BaseEntity implements Serializable{
     private Integer likes;
 
     private String content;
+
+    @Transient
+    private String isZan;
 }

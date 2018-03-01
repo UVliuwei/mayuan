@@ -178,12 +178,19 @@ layui.define('fly', function (exports) {
     //解答操作
     gather.jiedaActive = {
         zan: function (li) { //赞
+            var userId = layui.cache.user.uid;
+            if(userId == '-1') {
+                layer.msg("请先登录", {
+                    time: 2000,//2秒关闭（如果不配置，默认是3秒）
+                    anim: 6
+                });
+                return;
+            }
+            var ansId = li.attr('id')
             var othis = $(this), ok = othis.hasClass('zanok');
-            fly.json('/api/jieda-zan/', {
-                ok: ok
-                , id: li.data('id')
+            fly.json('/api/zan/' + userId + '/' + ansId + '/' + !ok, {
             }, function (res) {
-                if (res.status === 0) {
+                if (res.status == '1') {
                     var zans = othis.find('em').html() | 0;
                     othis[ok ? 'removeClass' : 'addClass']('zanok');
                     othis.find('em').html(ok ? (--zans) : (++zans));

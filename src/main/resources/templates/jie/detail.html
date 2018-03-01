@@ -106,9 +106,9 @@
               <div name="detail" class="detail-body jieda-body photos" th:text="${answer.content}">
               </div>
               <div class="jieda-reply">
-              <span class="jieda-zan zanok" type="zan">
+              <span th:class="${answer.isZan == 'true'?'jieda-zan zanok':'jieda-zan'}" type="zan">
                 <i class="iconfont icon-zan"></i>
-                <em><span th:text="${answer.likes}"></span></em>
+                <em th:text="${answer.likes}"></em>
               </span>
                 <span type="reply">
                 <i class="iconfont icon-svgmoban53"></i>
@@ -141,7 +141,7 @@
             </div>
             <div class="layui-form-item">
               <input type="hidden" id="postId" name="postId" th:value="${post.id}">
-              <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
+              <input type="hidden" id="userId" name="userId" th:value="${session.user == null? -1:session.user.id}">
               <button class="layui-btn" type="button" onclick="answerSubmit(this)">提交回复</button>
             </div>
           </form>
@@ -231,9 +231,8 @@
             layer.msg("未登录");
             return;
         }
-        if (content == '') {
-            layer.msg("回答内容不能为空", {icon: 2, time: 1000, shade: 0.1, offset: '300px'}, function () {
-            });
+        if (content.length < 2) {
+            layer.msg("回答太过简陋", { time: 2000, anim: 6});
             return;
         }
 

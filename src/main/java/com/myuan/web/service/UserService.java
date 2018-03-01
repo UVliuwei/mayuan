@@ -4,6 +4,7 @@ import com.myuan.web.dao.UserDao;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyRole;
 import com.myuan.web.entity.MyUser;
+import com.myuan.web.entity.MyZan;
 import com.myuan.web.utils.SaltPasswordUtil;
 import java.util.Date;
 import lombok.extern.log4j.Log4j;
@@ -24,6 +25,8 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ZanService zanService;
 
     /**
      * 用户名查用户
@@ -63,7 +66,10 @@ public class UserService {
             user.setKiss(200);
             user.setLocked("0");
             userDao.save(user);
-
+            //点赞表
+            MyZan zan = new MyZan();
+            zan.setUserId(user.getId());
+            zanService.addUserZan(zan);
             log.info("用户：" + user.getName() + "注册成功");
             saveUserRole(user.getId());
             return MyResult.action("/user/login", "注册成功");
