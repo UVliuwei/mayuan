@@ -72,7 +72,7 @@ public class PostService {
         try {
             post.preUpdate();
             postDao.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getUpdateDate());
-            return MyResult.action("/jie/index", "问题编辑成功");
+            return MyResult.action("column/all/all", "问题编辑成功");
         } catch (Exception ex) {
             log.info("问题更新失败：" + ex.toString());
         }

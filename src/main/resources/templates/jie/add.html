@@ -29,7 +29,7 @@
                 <div class="layui-col-md3">
                   <label class="layui-form-label">所在专栏</label>
                   <div class="layui-input-block">
-                    <input type="hidden" id="userId" th:value="${session.user == null? -1:session.user.id}">
+                    <input type="hidden" id="userId" name="userId" th:value="${session.user == null? -1:session.user.id}">
                     <select lay-verify="required" name="pcolumn" lay-filter="column">
                       <option></option>
                       <option value="提问">提问</option>
