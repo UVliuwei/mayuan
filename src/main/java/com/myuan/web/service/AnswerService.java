@@ -54,156 +54,149 @@ public class AnswerService {
      * <liuwei> [2018/2/24 9:34] 发表回复
      */
     @Transactional
-    @CacheEvict(value = "answers", key = "'post_' + #postId")
     public MyResult addAnswer(Long userId, Long postId, String content) {
-        try {
-            MyUser user = userService.getUserById(userId);
-            MyAnswer answer = new MyAnswer();
-            answer.setContent(content.trim());
-            answer.setPostId(postId);
-            answer.setUserId(userId);
-            answer.setLikes(0);
-            answer.setUserImg(user.getImg());
-            answer.setUserName(user.getName());
-            answer.preInsert();
-            answerDao.save(answer);
-            String[] strings = content.trim().split(" ");
-            String reg = "@.*";
-            boolean matches = Pattern.matches(reg, strings[0]);
-            String html = "<li><div class=\"detail-about detail-about-reply\"><a class=\"fly-avatar\" href=\"/user/" + user.getId()
-                + "/info\" target=\"_blank\"><img src=\"/images/" + user.getImg() + "\" alt=\"" + user.getName()
-                + "\"></a><div class=\"fly-detail-user\"><a href=\"/user/" + user.getId() + "/info\" target=\"_blank\" class=\"fly-link\"><cite>"
-                + user.getName()
-                + "</cite></a></div><div class=\"detail-hits\"><span>刚刚</span></div></div><div id='ahtml' class=\"detail-body jieda-body photos\">"
-                + content + "</div></li>";
-            if (matches) {
-                MyReply reply = new MyReply();
-                MyUser replyUser = userService.getUserByName(strings[0].substring(1));
-                reply.setPostId(postId);
-                reply.setPostName(postService.getPostById(postId).getTitle());
-                reply.setUserId(userId);
-                reply.setUserName(user.getName());
-                if (replyUser == null) {
-                    reply.setReplyId(-1L);
-                } else {
-                    reply.setReplyId(user.getId());
-                }
-                reply.setReplyName(strings[0].substring(1));
-                reply.preInsert();
-                replyDao.save(reply);
-                postService.addPostAnsNum(postId);
+        MyUser user = userService.getUserById(userId);
+        MyAnswer answer = new MyAnswer();
+        answer.setContent(content.trim());
+        answer.setPostId(postId);
+        answer.setUserId(userId);
+        answer.setLikes(0);
+        answer.setUserImg(user.getImg());
+        answer.setUserName(user.getName());
+        answer.preInsert();
+        answerDao.save(answer);
+        String[] strings = content.trim().split(" ");
+        String reg = "@.*";
+        boolean matches = Pattern.matches(reg, strings[0]);
+        String html = "<li><div class=\"detail-about detail-about-reply\"><a class=\"fly-avatar\" href=\"/user/" + user.getId()
+            + "/info\" target=\"_blank\"><img src=\"/images/" + user.getImg() + "\" alt=\"" + user.getName()
+            + "\"></a><div class=\"fly-detail-user\"><a href=\"/user/" + user.getId() + "/info\" target=\"_blank\" class=\"fly-link\"><cite>"
+            + user.getName()
+            + "</cite></a></div><div class=\"detail-hits\"><span>刚刚</span></div></div><div id='ahtml' class=\"detail-body jieda-body photos\">"
+            + content + "</div></li>";
+        if (matches) {
+            MyReply reply = new MyReply();
+            MyUser replyUser = userService.getUserByName(strings[0].substring(1));
+            reply.setPostId(postId);
+            reply.setPostName(postService.getPostById(postId).getTitle());
+            reply.setUserId(userId);
+            reply.setUserName(user.getName());
+            if (replyUser == null) {
+                reply.setReplyId(-1L);
+            } else {
+                reply.setReplyId(user.getId());
             }
+            reply.setReplyName(strings[0].substring(1));
+            reply.preInsert();
+            replyDao.save(reply);
+        }
+            postService.addPostAnsNum(postId);
             return MyResult.data(html);
-        } catch (Exception e) {
-            log.info("回复失败：" + e.toString());
         }
-        return MyResult.error("系统异常，请重试");
-    }
 
-    public Integer getMessageNums(Long userId) {
-        return replyDao.countByReplyId(userId);
-    }
+        public Integer getMessageNums (Long userId){
+            return replyDao.countByReplyId(userId);
+        }
 
-    public MyResult findUserMessage(Long id) {
-        List<MyReply> replies = replyDao.findMyRepliesByReplyId(id);
-        return MyResult.data(JSON.toJSONString(replies));
-    }
+        public MyResult findUserMessage (Long id){
+            List<MyReply> replies = replyDao.findMyRepliesByReplyId(id);
+            return MyResult.data(JSON.toJSONString(replies));
+        }
 
-    public MyResult deleteMessage(Long id) {
-        MyUser user = userService.getUserById(id);
-        replyDao.deleteById(id);
-        return MyResult.ok("");
-    }
-
-    /**
-     * <liuwei> [2018/3/1 9:29]清空全部消息
-     */
-    public MyResult deleteMessages(Long userId) {
-        replyDao.deleteAllByReplyId(userId);
-        return MyResult.ok("");
-    }
-
-    @Transactional
-    @CacheEvict(value = "answers", key = "'post_' + #id")
-    public MyResult deleteAnswer(Long id, String flag) {
-        try {
-            answerDao.deleteById(id);
-            if ("true".equals(flag)) {
-                postService.removeAccept(id);
-            }
+        public MyResult deleteMessage (Long id){
+            MyUser user = userService.getUserById(id);
+            replyDao.deleteById(id);
             return MyResult.ok("");
-        } catch (Exception e) {
-            log.info("回答删除失败：" + e.toString());
         }
-        return MyResult.error("系统异常，请重试");
-    }
 
-    /**
-     * <liuwei> [2018/2/24 14:08] 回复分页
-     */
-    public MyPage<MyAnswer> findAnswers(long postId, Integer page, Integer limit) {
-        Sort sort = new Sort(Direction.ASC, "createDate");
-        Pageable pageable = new PageRequest(page - 1, limit, sort);
-        Page<MyAnswer> answers = answerDao.findMyAnswersByPostId(postId, pageable);
-        MyPage<MyAnswer> myPage = new MyPage<>();
-        if (answers.getTotalElements() == 0) {
-            myPage.setCount(0L);
-            myPage.setCurrentPage(page);
-            myPage.setPageNum(0);
-            myPage.setList(new ArrayList<MyAnswer>());
-        } else {
-            myPage.setCount(answers.getTotalElements());
-            myPage.setCurrentPage(page);
-            myPage.setPageNum(answers.getTotalPages());
-            MyUser user = UserUtil.getCurrentUser();
-            if (user != null) {
-                for (MyAnswer answer : answers.getContent()) {
-                    answer.setIsZan(zanService.checkZan(user.getId(), answer.getId()));
+        /**
+         * <liuwei> [2018/3/1 9:29]清空全部消息
+         */
+        public MyResult deleteMessages (Long userId){
+            replyDao.deleteAllByReplyId(userId);
+            return MyResult.ok("");
+        }
+
+        @Transactional
+        public MyResult deleteAnswer (Long id, String flag){
+            try {
+                answerDao.deleteById(id);
+                if ("true".equals(flag)) {
+                    postService.removeAccept(id);
                 }
+                return MyResult.ok("");
+            } catch (Exception e) {
+                log.info("回答删除失败：" + e.toString());
             }
-            myPage.setList(answers.getContent());
+            return MyResult.error("系统异常，请重试");
         }
-        return myPage;
-    }
 
-    /**
-     * <liuwei> [2018/2/26 8:36] 用户回答
-     */
-    public List<MyAnswer> findUserAnswers(Long userId) {
-        return answerDao.findMyAnswersByUserId(userId);
-    }
-
-    public MyAnswer findAnswerById(Long id) {
-        return answerDao.findOne(id);
-    }
-
-    /**
-     * <liuwei> [2018/2/27 14:13] 回帖周榜
-     */
-    @Transactional
-    @Cacheable(value = "topAnswerUser#43200#43200")
-    public List<UserAnswer> findTopAnswerUsers() {
-        Sort sort = new Sort(Direction.DESC, "createDate");
-        Pageable pageable = new PageRequest(0, 12);
-        Date date = DateUtil.getThisWeek();
-        Page<Long> userAnswers = answerDao.findTopAnswerUsers(date, pageable);
-        List<UserAnswer> userList = Lists.newArrayList();
-        UserAnswer userAnswer = null;
-        for (Long id : userAnswers.getContent()) {
-            userAnswer = new UserAnswer();
-            userAnswer.setUser(userService.getUserById(id));
-            userAnswer.setCount(answerDao.countByUserIdAndCreateDateAfter(id, date));
-            userList.add(userAnswer);
+        /**
+         * <liuwei> [2018/2/24 14:08] 回复分页
+         */
+        public MyPage<MyAnswer> findAnswers ( long postId, Integer page, Integer limit){
+            Sort sort = new Sort(Direction.ASC, "createDate");
+            Pageable pageable = new PageRequest(page - 1, limit, sort);
+            Page<MyAnswer> answers = answerDao.findMyAnswersByPostId(postId, pageable);
+            MyPage<MyAnswer> myPage = new MyPage<>();
+            if (answers.getTotalElements() == 0) {
+                myPage.setCount(0L);
+                myPage.setCurrentPage(page);
+                myPage.setPageNum(0);
+                myPage.setList(new ArrayList<MyAnswer>());
+            } else {
+                myPage.setCount(answers.getTotalElements());
+                myPage.setCurrentPage(page);
+                myPage.setPageNum(answers.getTotalPages());
+                MyUser user = UserUtil.getCurrentUser();
+                if (user != null) {
+                    for (MyAnswer answer : answers.getContent()) {
+                        answer.setIsZan(zanService.checkZan(user.getId(), answer.getId()));
+                    }
+                }
+                myPage.setList(answers.getContent());
+            }
+            return myPage;
         }
-        return userList;
-    }
 
-    /**
-     * <liuwei> [2018/3/1 8:51] 点赞量修改
-     */
-    public void addAnswerZanNum(Long id, Integer num) {
-        MyAnswer answer = answerDao.findOne(id);
-        answer.setLikes(answer.getLikes() + num);
-    }
+        /**
+         * <liuwei> [2018/2/26 8:36] 用户回答
+         */
+        public List<MyAnswer> findUserAnswers (Long userId){
+            return answerDao.findMyAnswersByUserId(userId);
+        }
 
-}
+        public MyAnswer findAnswerById (Long id){
+            return answerDao.findOne(id);
+        }
+
+        /**
+         * <liuwei> [2018/2/27 14:13] 回帖周榜
+         */
+        @Transactional
+        @Cacheable(value = "topAnswerUser#43200#43200")
+        public List<UserAnswer> findTopAnswerUsers () {
+            Sort sort = new Sort(Direction.DESC, "createDate");
+            Pageable pageable = new PageRequest(0, 12);
+            Date date = DateUtil.getThisWeek();
+            Page<Long> userAnswers = answerDao.findTopAnswerUsers(date, pageable);
+            List<UserAnswer> userList = Lists.newArrayList();
+            UserAnswer userAnswer = null;
+            for (Long id : userAnswers.getContent()) {
+                userAnswer = new UserAnswer();
+                userAnswer.setUser(userService.getUserById(id));
+                userAnswer.setCount(answerDao.countByUserIdAndCreateDateAfter(id, date));
+                userList.add(userAnswer);
+            }
+            return userList;
+        }
+
+        /**
+         * <liuwei> [2018/3/1 8:51] 点赞量修改
+         */
+        public void addAnswerZanNum (Long id, Integer num){
+            MyAnswer answer = answerDao.findOne(id);
+            answer.setLikes(answer.getLikes() + num);
+        }
+
+    }
