@@ -80,6 +80,9 @@
   </div>
 </div>
 <div th:replace="/common/footer::footer"></div>
+<script th:src="@{/res/mods/form.js}"></script>
+<script th:src="@{/res/mods/jquery.js}"></script>
+<script th:src="@{/res/layui/layui.js}"></script>
 <script>
   var userId = $("#userId").val();
     layui.cache.page = 'user';

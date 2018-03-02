@@ -32,11 +32,11 @@
                     <input id="userId" name="userId" th:value="${post.userId}" type="hidden">
                     <input id="id" name="id" th:value="${post.id}" type="hidden">
                     <select lay-verify="required" name="pcolumn" lay-filter="column" disabled>
-                      <option value="0" th:selected="${post.pcolumn=='0'}">提问</option>
-                      <option value="99" th:selected="${post.pcolumn=='99'}">分享</option>
-                      <option value="100" th:selected="${post.pcolumn=='100'}">讨论</option>
-                      <option value="101" th:selected="${post.pcolumn=='101'}">建议</option>
-                      <option value="168" th:selected="${post.pcolumn=='168'}">公告</option>
+                      <option value="提问" th:selected="${post.pcolumn=='提问'}">提问</option>
+                      <option value="分享" th:selected="${post.pcolumn=='分享'}">分享</option>
+                      <option value="讨论" th:selected="${post.pcolumn=='讨论'}">讨论</option>
+                      <option value="建议" th:selected="${post.pcolumn=='建议'}">建议</option>
+                      <option value="公告" th:selected="${post.pcolumn=='公告'}">公告</option>
                     </select>
                   </div>
                 </div>
@@ -56,7 +56,7 @@
                   </div>
                 </div>
                 <div class="layui-col-md5">
-                  <label class="layui-form-label" for="L_version">技术方向</label>
+                  <label class="layui-form-label" for="L_version">版本</label>
                   <div class="layui-input-block">
                     <input type="text" id="L_version" th:value="${post.version}" name="version" autocomplete="off" class="layui-input"/>
                   </div>

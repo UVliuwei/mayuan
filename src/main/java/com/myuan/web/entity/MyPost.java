@@ -32,9 +32,9 @@ public class MyPost extends BaseEntity implements Serializable {
 
     @Size(min = 5, max = 30, message = "标题在5到30个字之间")
     private String title;
-
+    //类型
     private String ptype;
-    //技术方向
+    //版本
     private String version;
 
     //专栏

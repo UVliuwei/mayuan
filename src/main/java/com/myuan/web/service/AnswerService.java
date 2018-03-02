@@ -141,7 +141,6 @@ public class AnswerService {
     /**
      * <liuwei> [2018/2/24 14:08] 回复分页
      */
-    @Cacheable(value = "answers", key = "'post_' + #postId")
     public MyPage<MyAnswer> findAnswers(long postId, Integer page, Integer limit) {
         Sort sort = new Sort(Direction.ASC, "createDate");
         Pageable pageable = new PageRequest(page - 1, limit, sort);
@@ -182,7 +181,7 @@ public class AnswerService {
      * <liuwei> [2018/2/27 14:13] 回帖周榜
      */
     @Transactional
-    @Cacheable(value = "topAnswerUser#86400#86400")
+    @Cacheable(value = "topAnswerUser#43200#43200")
     public List<UserAnswer> findTopAnswerUsers() {
         Sort sort = new Sort(Direction.DESC, "createDate");
         Pageable pageable = new PageRequest(0, 12);
