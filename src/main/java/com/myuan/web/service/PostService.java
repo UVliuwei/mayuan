@@ -91,7 +91,7 @@ public class PostService {
             object.put("code", "0");
             object.put("msg", "");
             object.put("count", "0");
-            object.put("data", new ArrayList<MyPost>());
+            object.put("data", null);
             return object;
         }
         object.put("code", "0");
