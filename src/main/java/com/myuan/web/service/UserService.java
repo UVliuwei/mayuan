@@ -33,6 +33,8 @@ public class UserService {
     private ZanService zanService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private SignService signService;
 
     /**
      * 用户名查用户
@@ -69,14 +71,14 @@ public class UserService {
                 return MyResult.error("邮箱已被注册");
             }
             user.preInsert();
-            user.setImg("1.jpg");
+            user.setImg(IDUtil.randomer() + ".jpg");
             user.setKiss(200);
             user.setLocked("0");
             userDao.save(user);
             //点赞表
-            MyZan zan = new MyZan();
-            zan.setUserId(user.getId());
-            zanService.addUserZan(zan);
+            zanService.addUserZan(user.getId());
+            //签到表
+            signService.addSign(user.getId());
             log.info("用户：" + user.getName() + "注册成功");
             saveUserRole(user.getId());
             return MyResult.action("/user/login", "注册成功");

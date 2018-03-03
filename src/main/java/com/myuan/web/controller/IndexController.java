@@ -2,16 +2,11 @@ package com.myuan.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myuan.web.entity.MyPost;
-import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MyUser;
 import com.myuan.web.service.AnswerService;
 import com.myuan.web.service.PostService;
 import com.myuan.web.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

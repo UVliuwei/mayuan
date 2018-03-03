@@ -27,11 +27,8 @@ public class MySign extends BaseEntity implements Serializable {
     //自增长主键
     private Long id;
 
-    private String signed;
+    private Long userId;
 
     private Integer continueNum;
 
-    private Integer signNum;
-
-    private Date lastDate;
 }

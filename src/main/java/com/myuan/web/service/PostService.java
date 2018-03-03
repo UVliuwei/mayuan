@@ -158,7 +158,6 @@ public class PostService {
     /**
      * <liuwei> [2018/2/26 10:45] 本周热议
      */
-    @Cacheable(value = "topPost#300#300")
     public List<MyPost> getWeekTopPost() {
         Sort sort = new Sort(Direction.DESC, "ansnum");
         Pageable pageable = new PageRequest(0, 15, sort);

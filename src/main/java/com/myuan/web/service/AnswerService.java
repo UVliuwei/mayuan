@@ -163,7 +163,9 @@ public class AnswerService {
          * <liuwei> [2018/2/26 8:36] 用户回答
          */
         public List<MyAnswer> findUserAnswers (Long userId){
-            return answerDao.findMyAnswersByUserId(userId);
+            Sort sort = new Sort(Direction.ASC, "createDate");
+            Pageable pageable = new PageRequest(0, 12, sort);
+            return answerDao.findMyAnswersByUserId(userId, pageable).getContent();
         }
 
         public MyAnswer findAnswerById (Long id){

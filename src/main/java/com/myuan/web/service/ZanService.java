@@ -25,7 +25,9 @@ public class ZanService {
     @Autowired
     private AnswerService answerService;
 
-    public void addUserZan(MyZan zan) {
+    public void addUserZan(Long userId) {
+        MyZan zan = new MyZan();
+        zan.setUserId(userId);
         zan.preInsert();
         zanDao.save(zan);
     }

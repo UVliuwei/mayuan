@@ -12,7 +12,6 @@ public class SwitchUtil {
 
     private static Map<String, String> columnMap = null;
 
-
     public static final String switchColumn(String column) {
         if (columnMap == null) {
             columnMap = Maps.newHashMap();
@@ -25,4 +24,19 @@ public class SwitchUtil {
         }
         return columnMap.get(column);
     }
+
+    public static final Integer switchDayKiss(Integer day) {
+        Integer kiss = 0;
+        if (day < 5) {
+            kiss = 5;
+        } else if (day < 15) {
+            kiss = 10;
+        } else if (day < 30) {
+            kiss = 15;
+        } else {
+            kiss = 20;
+        }
+        return kiss;
+    }
+
 }

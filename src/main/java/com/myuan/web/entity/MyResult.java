@@ -16,12 +16,11 @@ public class MyResult {
     //-1 失败 、 1 成功
     private String status;
     private String msg;
-    //json格式的返回数据
-    private String data;
+    private Object data;
     //跳转的url
     private String action;
 
-    public MyResult(String status, String msg, String data, String action) {
+    public MyResult(String status, String msg, Object data, String action) {
         this.status = status;
         this.msg = msg;
         this.data = data;
@@ -40,7 +39,7 @@ public class MyResult {
         return new MyResult("1", msg, null, null);
     }
 
-    public static MyResult data(String data) {
+    public static MyResult data(Object data) {
         return new MyResult("1", null, data, null);
     }
 
