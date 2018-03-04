@@ -6,6 +6,7 @@ import com.myuan.web.entity.MyUser;
 import com.myuan.web.service.AnswerService;
 import com.myuan.web.service.PostService;
 import com.myuan.web.service.UserService;
+import com.myuan.web.utils.SwitchUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,7 +65,13 @@ public class IndexController {
 
     @GetMapping("user/{id}/info")
     public String userInfo(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+        MyUser user = userService.getUserById(id);
+        String[] strings = user.getCity().split("/");
+        if(strings.length > 1) {
+            String addr = SwitchUtil.switchCodeCity(strings[0]) + "/" + SwitchUtil.switchCodeCity(strings[1]);
+            user.setCity(addr);
+        }
+        model.addAttribute("user", user);
         JSONObject posts = postService.findUserPosts(id, 1, 30);
         model.addAttribute("posts", posts.get("data"));
         model.addAttribute("answers", answerService.findUserAnswers(id));

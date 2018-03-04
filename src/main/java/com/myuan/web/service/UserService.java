@@ -8,6 +8,7 @@ import com.myuan.web.entity.MyZan;
 import com.myuan.web.utils.IDUtil;
 import com.myuan.web.utils.SaltPasswordUtil;
 import com.myuan.web.utils.SendMail;
+import com.myuan.web.utils.SwitchUtil;
 import java.util.Date;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,7 @@ public class UserService {
             }
             user.preInsert();
             user.setImg(IDUtil.randomer() + ".jpg");
+            user.setCity("隐藏");
             user.setKiss(200);
             user.setLocked("0");
             userDao.save(user);
@@ -112,14 +114,14 @@ public class UserService {
      * 更新用户信息
      */
     @CacheEvict(value = "users", key = "'user_'+#id")
-    public MyResult updateUserInfo(Long id, String name, String sex, String city, String description) {
+    public MyResult updateUserInfo(Long id, String name, String sex, String province, String city, String description) {
         try {
             MyUser user = getUserByName(name);
             if (user != null && !user.getId().equals(id)) {
                 return MyResult.error("用户名已存在");
             }
-            city = city == "" || city == null ? "隐藏" : city;
-            userDao.updateUserInfo(id, name, sex, city, description, new Date());
+            String addr = province + "/" + city;
+            userDao.updateUserInfo(id, name, sex, addr, description, new Date());
             return MyResult.ok("信息修改成功");
         } catch (Exception ex) {
             ex.printStackTrace();

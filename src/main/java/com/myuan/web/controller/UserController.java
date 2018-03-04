@@ -62,9 +62,9 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "用户信息修改", notes = "用户信息修改")
     @PutMapping("/user/{id}")
-    public MyResult updateInfo(@PathVariable("id") Long id, String name, String sex, String city, String description) {
+    public MyResult updateInfo(@PathVariable("id") Long id, String name, String sex, String province, String city, String description) {
 
-        MyResult result = userService.updateUserInfo(id, name, sex, city, description);
+        MyResult result = userService.updateUserInfo(id, name, sex, province, city, description);
         return result;
     }
     @ApiOperation(value = "重置密码", notes = "重置密码")

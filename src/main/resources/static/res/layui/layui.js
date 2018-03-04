@@ -37,6 +37,7 @@
         code: "modules/code",
         jquery: "modules/jquery",
         mobile: "modules/mobile",
+          citySelect: "modules/citySelect",
         "layui.all": "../layui.all"
       };
   n.prototype.cache = o, n.prototype.define = function (e, t) {

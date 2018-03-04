@@ -43,7 +43,7 @@
       <div class="layui-tab-content" style="padding: 20px 0;">
         <div class="layui-form layui-form-pane layui-tab-item layui-show"
              ng-controller="infoController">
-          <form id="infoForm" method="put">
+          <form id="infoForm" method="put" class="layui-form">
             <div class="layui-form-item">
               <label for="email" class="layui-form-label">邮箱</label>
               <div class="layui-input-inline">
@@ -65,18 +65,14 @@
                 </div>
               </div>
             </div>
-            <div class="layui-form-item">
-              <label for="L_city" class="layui-form-label">城市</label>
-              <div class="layui-input-inline">
-                <input type="text" id="L_city" name="city" autocomplete="off" ng-model="user.city"
-                       class="layui-input"/>
-              </div>
-            </div>
+
+            <div id="city" class="layui-form-item"></div>
+
             <div class="layui-form-item layui-form-text">
               <label for="description" class="layui-form-label">签名</label>
               <div class="layui-input-block">
                 <textarea placeholder="随便写些什么刷下存在感" id="description" name="description"
-                          ng-model="user.description"  autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
+                          ng-model="user.description" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
               </div>
             </div>
             <div class="layui-form-item">
@@ -156,6 +152,7 @@
 <div th:replace="/common/footer::footer"></div>
 <script th:src="@{/res/mods/form.js}"></script>
 <script th:src="@{/res/mods/jquery.js}"></script>
+<script th:src="@{/res/region/region.js}"></script>
 <script>
     var userId = $("#userId").val();
     layui.cache.user = {
@@ -170,12 +167,13 @@
 </script>
 <script>
     var id = layui.cache.user.uid;
-    var app = angular.module("app",[]);
+    var app = angular.module("app", []);
     app.controller("infoController", function ($scope) {
         $("#infoForm").attr("action", "/api/user/" + id);
         $.get("/api/user/" + id, function (data) {
             $scope.$apply(function () {
                 $scope.user = angular.copy(data);
+                layui.cache.user.city = data.city;
             });
         });
     });
@@ -187,6 +185,50 @@
                 if (!/^.{6,16}$/.test(value)) {
                     return '密码长度必须在6到16位之间';
                 }
+            }
+        });
+    });
+</script>
+<script>
+    layui.use('citySelect', function () {  //与引用其他原始模块一样，引入citySelect模块
+        var $ = layui.jquery,
+            citySelect = layui.citySelect;
+        var selectedArr = [];
+        if(layui.cache.user.city != '隐藏') {
+            selectedArr = layui.cache.user.city.split("/");
+        }
+        //初始化
+        citySelect.render({
+            id: 'addRegion',
+            elem: '#city',
+            // url:"",
+            data: city,    //设置本地数据渲染
+            // method:'post',
+            lableName:'城市',    //自定义表单名称    默认：'行政区域'
+            //search:false,        //是否开启输入查询 默认：true
+            required:true,        //是否必选       默认：false
+            // msg: '请选择',  //模块下的提示信息 默认：null
+            selectedArr: selectedArr,    //默认选中数组        默认：[]
+            where: {},
+            response: {
+                statusName: 'status',
+                statusCode: 1,
+                msgName: 'msg',
+                dataName: 'data'
+            },
+            filed: {
+                area: true,    //是否启用区
+                regionId: 'regionId',
+                regionName: 'regionName',
+                //provinceName: "province",    //默认省份名称
+                //cityName : "city",      //默认城市名称
+                //areaName : "area",      //默认区县名称
+            },
+            done: function (res) {
+                //成功回调函数
+            },
+            error: function (res, e, m) {
+                //失败回调函数
             }
         });
     });
