@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DateUtil {
 
@@ -43,5 +44,19 @@ public class DateUtil {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
+    }
+
+    // 是否是昨天
+    public static final boolean checkDay(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DATE, -1);
+        int n = calendar.get(Calendar.DATE);
+        calendar.setTime(date);
+        int l = calendar.get(Calendar.DATE);
+        if(n == l) {
+            return true;
+        }
+        return false;
     }
 }

@@ -8,6 +8,7 @@ import com.myuan.web.dao.SignDao;
 import com.myuan.web.entity.MyResult;
 import com.myuan.web.entity.MySign;
 import com.myuan.web.entity.MyUser;
+import com.myuan.web.utils.DateUtil;
 import com.myuan.web.utils.SwitchUtil;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +48,11 @@ public class SignService {
             userService.addUserKiss(userId, 5);
             kiss = 5;
         } else {
-            sign.setContinueNum(sign.getContinueNum() + 1);
+            if (DateUtil.checkDay(sign.getUpdateDate())) {
+                sign.setContinueNum(sign.getContinueNum() + 1);
+            } else {
+                sign.setContinueNum(1);
+            }
             kiss = SwitchUtil.switchDayKiss(sign.getContinueNum());
             userService.addUserKiss(userId, kiss);
         }
