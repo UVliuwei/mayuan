@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class IDUtil {
 
-    public static String genImageId() {
+    public static String getImageId() {
 
         long millis = System.currentTimeMillis();
         Random random = new Random();
